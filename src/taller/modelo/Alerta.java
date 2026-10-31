@@ -6,7 +6,8 @@ import taller.enumeraciones.NivelAlerta;
 import taller.enumeraciones.TipoEventoClimatico;
 
 public class Alerta {
-    private String idAlerta;
+    private static int generadorId;
+    private final int idAlerta;
     private LocalDateTime fechaHora;
     private NivelAlerta nivel;
     private TipoEventoClimatico tipoEvento;
@@ -15,12 +16,13 @@ public class Alerta {
     private ZonaGeografica zonaGeografica;
 
     public Alerta() {
+        this.idAlerta = generadorId++;
     }
 
-    public Alerta(String idAlerta, LocalDateTime fechaHora, NivelAlerta nivel,
+    public Alerta(LocalDateTime fechaHora, NivelAlerta nivel,
             TipoEventoClimatico tipoEvento, String descripcion, EquipoRespuesta equipoRespuesta,
             ZonaGeografica zonaGeografica) {
-        this.idAlerta = idAlerta;
+        this.idAlerta = generadorId++;
         this.fechaHora = fechaHora;
         this.nivel = nivel;
         this.tipoEvento = tipoEvento;
@@ -29,12 +31,8 @@ public class Alerta {
         this.zonaGeografica = zonaGeografica;
     }
 
-    public String getIdAlerta() {
+    public int getIdAlerta() {
         return idAlerta;
-    }
-
-    public void setIdAlerta(String idAlerta) {
-        this.idAlerta = idAlerta;
     }
 
     public LocalDateTime getFechaHora() {
@@ -84,4 +82,17 @@ public class Alerta {
     public void setZonaGeografica(ZonaGeografica zonaGeografica) {
         this.zonaGeografica = zonaGeografica;
     }
+
+    public void asignarEquipoRespuesta(EquipoRespuesta equipo) {
+        if (this.requiereEquipoRespuesta()) {
+            this.equipoRespuesta = equipo;
+        } else {
+            System.out.println("No se puede asignar un equipo de respuesta a una alerta de este nivel.");
+        }
+    }
+
+    public boolean requiereEquipoRespuesta() {
+        return this.nivel == NivelAlerta.ROJA || this.nivel == NivelAlerta.NARANJA;
+    }
+
 }

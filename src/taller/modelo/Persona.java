@@ -3,12 +3,14 @@ package taller.modelo;
 public abstract class Persona {
     String dni;
     String nombre;
+    String apellido;
     String correoElectronico;
     String celular;
 
-    public Persona(String dni, String nombre, String correoElectronico, String celular) {
+    public Persona(String dni, String nombre, String apellido, String correoElectronico, String celular) {
         this.dni = dni;
         this.nombre = nombre;
+        this.apellido = apellido;
         this.correoElectronico = correoElectronico;
         this.celular = celular;
     }
@@ -43,6 +45,10 @@ public abstract class Persona {
 
     public void setCelular(String celular) {
         this.celular = celular;
+    }
+
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
     }
 
 }

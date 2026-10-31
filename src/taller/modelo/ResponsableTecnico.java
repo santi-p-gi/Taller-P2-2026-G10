@@ -10,13 +10,14 @@ public class ResponsableTecnico extends Persona {
     private List<EstacionMeteorologica> estacionesAsignadas;
     private List<Mantenimiento> mantenimientosAsignados;
 
-    public ResponsableTecnico(String dni, String nombre, String correoElectronico, String celular) {
-        super(dni, nombre, correoElectronico, celular);
+    public ResponsableTecnico(String dni, String nombre, String apellido, String correoElectronico, String celular) {
+        super(dni, nombre, apellido, correoElectronico, celular);
     }
 
-    public ResponsableTecnico(String dni, String nombre, String correoElectronico, String celular, String especialidad,
+    public ResponsableTecnico(String dni, String nombre, String apellido, String correoElectronico, String celular,
+            String especialidad,
             String numeroLicencia) {
-        super(dni, nombre, correoElectronico, celular);
+        super(dni, nombre, apellido, correoElectronico, celular);
         this.especialidad = especialidad;
         this.numeroLicencia = numeroLicencia;
         this.estacionesAsignadas = new ArrayList<>();

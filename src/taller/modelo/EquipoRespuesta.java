@@ -4,32 +4,30 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class EquipoRespuesta {
-    private String idEquipo;
+    private static int generadorId;
+    private final int idEquipo;
     private String nombre;
     private boolean disponible;
     private List<Alerta> alertasAsignadas;
     private List<ResponsableTecnico> ResponsablesAsignados;
 
     public EquipoRespuesta() {
+        this.idEquipo = generadorId++;
         this.disponible = true;
         this.alertasAsignadas = new ArrayList<>();
         this.ResponsablesAsignados = new ArrayList<>();
     }
 
-    public EquipoRespuesta(String idEquipo, String nombre, boolean disponible) {
-        this.idEquipo = idEquipo;
+    public EquipoRespuesta(String nombre, boolean disponible) {
+        this.idEquipo = generadorId++;
         this.nombre = nombre;
         this.disponible = disponible;
         this.alertasAsignadas = new ArrayList<>();
         this.ResponsablesAsignados = new ArrayList<>();
     }
 
-    public String getIdEquipo() {
+    public int getIdEquipo() {
         return idEquipo;
-    }
-
-    public void setIdEquipo(String idEquipo) {
-        this.idEquipo = idEquipo;
     }
 
     public String getNombre() {
@@ -74,6 +72,10 @@ public class EquipoRespuesta {
 
     public void eliminarAlerta(Alerta alerta) {
         this.alertasAsignadas.remove(alerta);
+    }
+
+    public void agregarIntegrante(ResponsableTecnico integrante) {
+        this.ResponsablesAsignados.add(integrante);
     }
 
 }

@@ -7,7 +7,7 @@ import taller.enumeraciones.EstadoOperativo;
 import taller.enumeraciones.TipoMantenimiento;
 
 public class Sensor {
-    private String idSensor;
+    private final String idSensor;
     private String marca;
     private String modelo;
     private double precision;
@@ -18,14 +18,15 @@ public class Sensor {
     private List<Medicion> mediciones;
 
     public Sensor() {
+        this.idSensor = java.util.UUID.randomUUID().toString();
         this.estado = EstadoOperativo.OPERATIVA;
         this.mantenimientos = new ArrayList<>();
         this.mediciones = new ArrayList<>();
     }
 
-    public Sensor(String idSensor, String marca, String modelo, double precision, EstadoOperativo estado,
+    public Sensor(String marca, String modelo, double precision, EstadoOperativo estado,
             LocalDateTime ultimaCalibracion, EstacionMeteorologica estacionMeteorologica) {
-        this.idSensor = idSensor;
+        this.idSensor = java.util.UUID.randomUUID().toString();
         this.marca = marca;
         this.modelo = modelo;
         this.precision = precision;
@@ -38,10 +39,6 @@ public class Sensor {
 
     public String getIdSensor() {
         return idSensor;
-    }
-
-    public void setIdSensor(String idSensor) {
-        this.idSensor = idSensor;
     }
 
     public String getMarca() {
@@ -100,10 +97,8 @@ public class Sensor {
         this.mantenimientos = mantenimientos;
     }
 
-    public void agregarMantenimiento(String idMantenimiento, LocalDateTime fecha, String descripcion,
-            TipoMantenimiento tipo, Sensor sensor, ResponsableTecnico responsableTecnico) {
-        this.mantenimientos
-                .add(new Mantenimiento(idMantenimiento, fecha, descripcion, tipo, sensor, responsableTecnico));
+    public void agregarMantenimiento(Mantenimiento mantenimiento) {
+        this.mantenimientos.add(mantenimiento);
     }
 
     public List<Medicion> getMediciones() {
@@ -114,8 +109,21 @@ public class Sensor {
         this.mediciones = mediciones;
     }
 
-    public void agregarMedicion(String idMedicion, LocalDateTime fecha, double milimetros, boolean anomala) {
-        this.mediciones.add(new Medicion(idMedicion, fecha, milimetros, anomala));
+    public void registrarMedicion(LocalDateTime fecha, double milimetros, boolean anomala) {
+        this.mediciones.add(new Medicion(fecha, milimetros, anomala));
+    }
+
+    public boolean necesitaCalibracion() {
+        if (this.ultimaCalibracion == null) {
+            return true;
+        } else {
+            LocalDateTime limite = LocalDateTime.now().minusMonths(12);
+            return this.ultimaCalibracion.isBefore(limite);
+        }
+    }
+
+    public boolean validar(double milimetros) {
+        return milimetros >= 0.0 && milimetros <= 500.0;
     }
 
 }

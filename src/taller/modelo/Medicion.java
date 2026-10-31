@@ -3,28 +3,26 @@ package taller.modelo;
 import java.time.LocalDateTime;
 
 public class Medicion {
-    private String idMedicion;
+    private static int generadorId;
+    private final int idMedicion;
     private LocalDateTime fechaHora;
     private double milimetros;
     private boolean anomala;
 
     public Medicion() {
+        this.idMedicion = generadorId++;
         this.anomala = false;
     }
 
-    public Medicion(String idMedicion, LocalDateTime fechaHora, double milimetros, boolean anomala) {
-        this.idMedicion = idMedicion;
+    public Medicion(LocalDateTime fechaHora, double milimetros, boolean anomala) {
+        this.idMedicion = generadorId++;
         this.fechaHora = fechaHora;
         this.milimetros = milimetros;
         this.anomala = anomala;
     }
 
-    public String getIdMedicion() {
+    public int getIdMedicion() {
         return idMedicion;
-    }
-
-    public void setIdMedicion(String idMedicion) {
-        this.idMedicion = idMedicion;
     }
 
     public LocalDateTime getFechaHora() {

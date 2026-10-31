@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import taller.enumeraciones.TipoMantenimiento;
 
 public class Mantenimiento {
-
-    private String idMantenimiento;
+    private static int generadorId;
+    private final int idMantenimiento;
     private LocalDateTime fecha;
     private String descripcion;
     private TipoMantenimiento tipo;
@@ -14,11 +14,12 @@ public class Mantenimiento {
     private ResponsableTecnico responsableTecnico;
 
     public Mantenimiento() {
+        this.idMantenimiento = generadorId++;
     }
 
-    public Mantenimiento(String idMantenimiento, LocalDateTime fecha, String descripcion, TipoMantenimiento tipo,
+    public Mantenimiento(LocalDateTime fecha, String descripcion, TipoMantenimiento tipo,
             Sensor sensor, ResponsableTecnico responsableTecnico) {
-        this.idMantenimiento = idMantenimiento;
+        this.idMantenimiento = generadorId++;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.tipo = tipo;
@@ -27,12 +28,8 @@ public class Mantenimiento {
 
     }
 
-    public String getIdMantenimiento() {
+    public int getIdMantenimiento() {
         return idMantenimiento;
-    }
-
-    public void setIdMantenimiento(String idMantenimiento) {
-        this.idMantenimiento = idMantenimiento;
     }
 
     public LocalDateTime getFecha() {

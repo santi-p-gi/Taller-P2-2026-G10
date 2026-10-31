@@ -1,6 +1,5 @@
 package taller.modelo;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,10 +121,10 @@ public class EstacionMeteorologica {
         this.mantenimientos = mantenimientos;
     }
 
-    public void agregarMantenimiento(String idMantenimiento, LocalDateTime fecha, String descripcion,
+    public void agregarMantenimiento(LocalDateTime fecha, String descripcion,
             TipoMantenimiento tipo, Sensor sensor, ResponsableTecnico responsableTecnico) {
         this.mantenimientos
-                .add(new Mantenimiento(idMantenimiento, fecha, descripcion, tipo, sensor, responsableTecnico));
+                .add(new Mantenimiento(fecha, descripcion, tipo, sensor, responsableTecnico));
     }
 
     public ResponsableTecnico getResponsableTecnico() {
@@ -138,6 +137,18 @@ public class EstacionMeteorologica {
 
     public void agregarResponsableTecnico(ResponsableTecnico responsableTecnico) {
         this.responsableTecnico = responsableTecnico;
+    }
+
+    public void instalarSensor(Sensor sensor) {
+        this.sensores.add(sensor);
+    }
+
+    public void retirarSensor(Sensor sensor) {
+        this.sensores.remove(sensor);
+    }
+
+    public boolean estaOperativa() {
+        return this.estado == EstadoOperativo.OPERATIVA;
     }
 
 }
