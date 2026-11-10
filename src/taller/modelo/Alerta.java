@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import taller.enumeraciones.NivelAlerta;
 import taller.enumeraciones.TipoEventoClimatico;
+import taller.excepciones.AlertaYaAtendidaException;
+import taller.excepciones.EquipoSinIntegrantesException;
 
 public class Alerta {
     private static int generadorId;
@@ -14,6 +16,7 @@ public class Alerta {
     private String descripcion;
     private EquipoRespuesta equipoRespuesta;
     private ZonaGeografica zonaGeografica;
+    private boolean atendida;
 
     public Alerta() {
         this.idAlerta = generadorId++;
@@ -27,8 +30,11 @@ public class Alerta {
         this.nivel = nivel;
         this.tipoEvento = tipoEvento;
         this.descripcion = descripcion;
-        this.equipoRespuesta = equipoRespuesta;
+        this.atendida = false;
         this.zonaGeografica = zonaGeografica;
+        if (equipoRespuesta != null && requiereEquipoRespuesta()) {
+            asignarEquipo(equipoRespuesta);
+        }
     }
 
     public int getIdAlerta() {
@@ -83,11 +89,39 @@ public class Alerta {
         this.zonaGeografica = zonaGeografica;
     }
 
-    public void asignarEquipoRespuesta(EquipoRespuesta equipo) {
-        if (this.requiereEquipoRespuesta()) {
-            this.equipoRespuesta = equipo;
-        } else {
-            System.out.println("No se puede asignar un equipo de respuesta a una alerta de este nivel.");
+    public boolean isAtendida() {
+        return atendida;
+    }
+
+    public void asignarEquipo(EquipoRespuesta e) throws IllegalStateException, EquipoSinIntegrantesException {
+        if (!requiereEquipoRespuesta()) {
+            throw new IllegalStateException("La alerta no requiere de un equipo de respuesta");
+        }
+        if (e == null) {
+            throw new IllegalArgumentException("Debe indicarse un equipo de respuesta");
+        }
+        if (!e.isDisponible()) {
+            throw new IllegalStateException("El equipo " + e.getNombre() + " no esta disponible");
+        }
+        if (!e.tieneIntegrantes()) {
+            throw new EquipoSinIntegrantesException("El equipo de respuesta esta vacio");
+        }
+        this.equipoRespuesta = e;
+        e.agregarAlerta(this);
+        e.setDisponible(false);
+    }
+
+    public boolean estaPendienteDeEquipo() {
+        return requiereEquipoRespuesta() && equipoRespuesta == null;
+    }
+
+    public void marcarAtendida() throws AlertaYaAtendidaException {
+        if (atendida) {
+            throw new AlertaYaAtendidaException("La alerta ya fue atendida");
+        }
+        atendida = true;
+        if (this.equipoRespuesta != null) {
+            equipoRespuesta.setDisponible(true);
         }
     }
 
@@ -95,4 +129,10 @@ public class Alerta {
         return this.nivel == NivelAlerta.ROJA || this.nivel == NivelAlerta.NARANJA;
     }
 
+    public String toString() {
+        return "Alerta [idAlerta=" + idAlerta + ", fechaHora=" + fechaHora + ", nivel=" + nivel + ", tipoEvento="
+                + tipoEvento + ", descripcion=" + descripcion + ", atendida=" + atendida
+                + ", equipoRespuesta=" + (equipoRespuesta != null ? equipoRespuesta.getNombre() : "sin equipo")
+                + ", zonaGeografica=" + (zonaGeografica != null ? zonaGeografica.getNombre() : "null") + "]";
+    }
 }

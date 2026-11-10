@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-import taller.enumeraciones.EstadoOperativo;
 import taller.enumeraciones.NivelAlerta;
 import taller.enumeraciones.NivelVulnerabilidad;
 import taller.enumeraciones.TipoEventoClimatico;
+import taller.excepciones.UmbralInvalidoException;
 
 public class ZonaGeografica {
+    private double umbralAmarilla = 50.0;
+    private double umbralRoja = 150.0;
+    private double umbralNaranja = 100.0;
     private static int generadorId;
     private final int idZona;
     private String nombre;
@@ -75,7 +78,10 @@ public class ZonaGeografica {
         this.valoresHistoricos = valoresHistoricos;
     }
 
-    public void agregarValorHistorico(int mes, double acumuladoMedio) {
+    public void agregarValorHistorico(int mes, double acumuladoMedio) throws IllegalArgumentException {
+        if (mes < 1 || mes > 12) {
+            throw new IllegalArgumentException("El mes debe estar entre 1 y 12.");
+        }
         this.valoresHistoricos.add(new ValorHistorico(mes, acumuladoMedio));
     }
 
@@ -89,6 +95,7 @@ public class ZonaGeografica {
 
     public void agregarEstacionMeteorologica(EstacionMeteorologica estacion) {
         this.estacionesMeteorologicas.add(estacion);
+        estacion.setZonaGeografica(this);
     }
 
     public void eliminarEstacionMeteorologica(EstacionMeteorologica estacion) {
@@ -107,14 +114,25 @@ public class ZonaGeografica {
         this.alertas.add(alerta);
     }
 
-    public double lluviaAcumulada24hs() {
+    public void configurarUmbrales(double umbralAmarilla, double umbralNaranja, double umbralRoja)
+            throws UmbralInvalidoException {
+        if (!(0 < umbralAmarilla && umbralAmarilla < umbralNaranja && umbralNaranja < umbralRoja)) {
+            throw new UmbralInvalidoException("Los umbrales deben cumplir 0 < amarilla < naranja < roja.");
+        }
+        this.umbralAmarilla = umbralAmarilla;
+        this.umbralNaranja = umbralNaranja;
+        this.umbralRoja = umbralRoja;
+    }
+
+    public double lluviaAcumulada24hs(LocalDateTime referencia) {
         double total = 0.0;
-        LocalDateTime limite24hs = LocalDateTime.now().minusHours(24);
+        LocalDateTime limite24hs = referencia.minusHours(24);
         for (EstacionMeteorologica estacion : estacionesMeteorologicas) {
             if (estacion.estaOperativa()) {
                 for (Sensor sensor : estacion.getSensores()) {
                     for (Medicion medicion : sensor.getMediciones()) {
-                        if (medicion.getFechaHora().isAfter(limite24hs) && !medicion.isAnomala()) {
+                        if (medicion.getFechaHora().isAfter(limite24hs)
+                                && !medicion.getFechaHora().isAfter(referencia)) {
                             total += medicion.getMilimetros();
                         }
                     }
@@ -124,22 +142,68 @@ public class ZonaGeografica {
         return total;
     }
 
-    public NivelAlerta evaluarRiesgo() {
-        double lluvia24hs = lluviaAcumulada24hs();
-        if (lluvia24hs > 100) {
+    public NivelAlerta evaluarRiesgo(LocalDateTime referencia) {
+        double lluvia24hs = lluviaAcumulada24hs(referencia);
+        if (lluvia24hs >= umbralRoja) {
             return NivelAlerta.ROJA;
-        } else if (lluvia24hs > 50) {
+        } else if (lluvia24hs >= umbralNaranja) {
+            return NivelAlerta.NARANJA;
+        } else if (lluvia24hs >= umbralAmarilla) {
             return NivelAlerta.AMARILLA;
         } else {
             return NivelAlerta.VERDE;
         }
+
     }
 
-    public Alerta emitirAlerta(TipoEventoClimatico tipoEvento, String descripcion, EquipoRespuesta equipoRespuesta) {
-        NivelAlerta nivel = evaluarRiesgo();
-        Alerta alerta = new Alerta(LocalDateTime.now(), nivel, tipoEvento, descripcion,
-                equipoRespuesta, this);
+    public Alerta actualizarNivelAlerta(LocalDateTime referencia, String descripcion, EquipoRespuesta equipoRespuesta) {
+        NivelAlerta nivelAnterior = nivelAlertaActual;
+        nivelAlertaActual = evaluarRiesgo(referencia);
+
+        if (nivelAlertaActual.ordinal() > nivelAnterior.ordinal()) {
+            return emitirAlerta(TipoEventoClimatico.LLUVIA_COPIOSA, nivelAlertaActual,
+                    referencia, descripcion, equipoRespuesta);
+        }
+        return null;
+    }
+
+    public Alerta emitirAlerta(TipoEventoClimatico tipoEvento, NivelAlerta nivel, LocalDateTime fechaHora,
+            String descripcion, EquipoRespuesta equipoRespuesta) {
+        Alerta alerta = new Alerta(fechaHora, nivel, tipoEvento, descripcion, equipoRespuesta, this);
         agregarAlerta(alerta);
         return alerta;
+    }
+
+    public ValorHistorico obtenerValorHistorico(int mes) {
+        for (ValorHistorico valor : valoresHistoricos) {
+            if (valor.getMes() == mes) {
+                return valor;
+            }
+        }
+        return null;
+    }
+
+    public double acumuladoMensual(int anio, int mes) {
+        LocalDateTime inicioMes = LocalDateTime.of(anio, mes, 1, 0, 0);
+        LocalDateTime finMes = inicioMes.plusMonths(1).minusNanos(1);
+        double total = 0.0;
+        for (EstacionMeteorologica estacion : estacionesMeteorologicas) {
+            total += estacion.acumuladoEntreSensores(inicioMes, finMes);
+        }
+        return total;
+    }
+
+    public double desviacionMensual(int anio, int mes) {
+        ValorHistorico historico = obtenerValorHistorico(mes);
+        if (historico == null || historico.getAcumuladoMedio() == 0) {
+            throw new IllegalStateException("La zona no tiene valor histórico cargado para el mes " + mes + ".");
+        }
+        double acumulado = acumuladoMensual(anio, mes);
+        return (acumulado - historico.getAcumuladoMedio()) / historico.getAcumuladoMedio() * 100;
+    }
+
+    public String toString() {
+        return "ZonaGeografica [idZona=" + idZona + ", nombre=" + nombre + ", nivelVulnerabilidad="
+                + nivelVulnerabilidad + ", nivelAlertaActual=" + nivelAlertaActual + "]";
     }
 }

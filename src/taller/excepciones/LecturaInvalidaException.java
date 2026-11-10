@@ -1,4 +1,4 @@
-
+package taller.excepciones;
 
 public class LecturaInvalidaException extends RuntimeException {
 

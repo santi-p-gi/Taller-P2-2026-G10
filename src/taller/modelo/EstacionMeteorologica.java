@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import taller.enumeraciones.EstadoOperativo;
 import taller.enumeraciones.TipoEstacion;
-import taller.enumeraciones.TipoMantenimiento;
 
 public class EstacionMeteorologica {
+    private static int generadorId;
+    private int idEstacion;
     private String direccion;
     private String nombre;
     private Double latitud;
     private Double longitud;
+    private double altitud;
     private EstadoOperativo estado;
     private TipoEstacion tipo;
     private ZonaGeografica zonaGeografica;
@@ -20,18 +22,21 @@ public class EstacionMeteorologica {
     private ResponsableTecnico responsableTecnico;
 
     public EstacionMeteorologica() {
+        this.idEstacion = ++generadorId;
         this.estado = EstadoOperativo.OPERATIVA;
         this.sensores = new ArrayList<>();
         this.mantenimientos = new ArrayList<>();
     }
 
-    public EstacionMeteorologica(String direccion, String nombre, Double latitud, Double longitud,
+    public EstacionMeteorologica(String direccion, String nombre, Double latitud, Double longitud, double altitud,
             EstadoOperativo estado, TipoEstacion type, ZonaGeografica zonaGeografica,
             ResponsableTecnico responsableTecnico) {
+        this.idEstacion = ++generadorId;
         this.direccion = direccion;
         this.nombre = nombre;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.altitud = altitud;
         this.estado = estado;
         this.tipo = type;
         this.zonaGeografica = zonaGeografica;
@@ -39,6 +44,10 @@ public class EstacionMeteorologica {
         this.mantenimientos = new ArrayList<>();
         this.responsableTecnico = responsableTecnico;
 
+    }
+
+    public int getIdEstacion() {
+        return idEstacion;
     }
 
     public String getDireccion() {
@@ -73,6 +82,14 @@ public class EstacionMeteorologica {
         this.longitud = longitud;
     }
 
+    public double getAltitud() {
+        return altitud;
+    }
+
+    public void setAltitud(double altitud) {
+        this.altitud = altitud;
+    }
+
     public EstadoOperativo getEstado() {
         return estado;
     }
@@ -105,14 +122,6 @@ public class EstacionMeteorologica {
         this.sensores = sensores;
     }
 
-    public void agregarSensor(Sensor sensor) {
-        this.sensores.add(sensor);
-    }
-
-    public void eliminarSensor(Sensor sensor) {
-        this.sensores.remove(sensor);
-    }
-
     public List<Mantenimiento> getMantenimientos() {
         return mantenimientos;
     }
@@ -121,34 +130,53 @@ public class EstacionMeteorologica {
         this.mantenimientos = mantenimientos;
     }
 
-    public void agregarMantenimiento(LocalDateTime fecha, String descripcion,
-            TipoMantenimiento tipo, Sensor sensor, ResponsableTecnico responsableTecnico) {
-        this.mantenimientos
-                .add(new Mantenimiento(fecha, descripcion, tipo, sensor, responsableTecnico));
+    public void agregarMantenimiento(Mantenimiento mantenimiento) {
+        this.mantenimientos.add(mantenimiento);
+    }
+
+    public double acumuladoEntreSensores(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        double acumulado = 0.0;
+        for (Sensor sensor : sensores) {
+            acumulado += sensor.acumuladorEntre(fechaInicio, fechaFin);
+        }
+        return acumulado;
     }
 
     public ResponsableTecnico getResponsableTecnico() {
         return responsableTecnico;
     }
 
-    public void setResponsableTecnico(ResponsableTecnico responsableTecnico) {
+    public void asignarResponsableTecnico(ResponsableTecnico responsableTecnico) {
+        if (this.responsableTecnico != null) {
+            this.responsableTecnico.eliminarEstacionMeteorologica(this);
+        }
         this.responsableTecnico = responsableTecnico;
-    }
-
-    public void agregarResponsableTecnico(ResponsableTecnico responsableTecnico) {
-        this.responsableTecnico = responsableTecnico;
+        this.responsableTecnico.agregarEstacionMeteorologica(this);
     }
 
     public void instalarSensor(Sensor sensor) {
+        if (sensor.getEstacionMeteorologica() != null) {
+            throw new IllegalStateException("El sensor " + sensor.getIdSensor()
+                    + " ya está instalado en la estación " + sensor.getEstacionMeteorologica().getIdEstacion() + ".");
+        }
         this.sensores.add(sensor);
+        sensor.setEstacionMeteorologica(this);
     }
 
     public void retirarSensor(Sensor sensor) {
-        this.sensores.remove(sensor);
+        if (this.sensores.remove(sensor)) {
+            sensor.setEstacionMeteorologica(null);
+        }
     }
 
     public boolean estaOperativa() {
         return this.estado == EstadoOperativo.OPERATIVA;
     }
 
+    public String toString() {
+        return "EstacionMeteorologica [idEstacion=" + idEstacion + ", direccion=" + direccion + ", nombre=" + nombre
+                + ", latitud=" + latitud + ", longitud=" + longitud + ", altitud=" + altitud + ", estado=" + estado
+                + ", tipo=" + tipo + ", zonaGeografica="
+                + (zonaGeografica != null ? zonaGeografica.getNombre() : "null") + "]";
+    }
 }

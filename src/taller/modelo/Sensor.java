@@ -4,10 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import taller.enumeraciones.EstadoOperativo;
-import taller.enumeraciones.TipoMantenimiento;
+import taller.excepciones.EstacionFueraDeServicioException;
+import taller.excepciones.LecturaInvalidaException;
+import taller.excepciones.SensorNoOperativoException;
 
 public class Sensor {
-    private final String idSensor;
+    private static int generadorId;
+    private int idSensor;
     private String marca;
     private String modelo;
     private double precision;
@@ -18,7 +21,7 @@ public class Sensor {
     private List<Medicion> mediciones;
 
     public Sensor() {
-        this.idSensor = java.util.UUID.randomUUID().toString();
+        this.idSensor = ++generadorId;
         this.estado = EstadoOperativo.OPERATIVA;
         this.mantenimientos = new ArrayList<>();
         this.mediciones = new ArrayList<>();
@@ -26,7 +29,7 @@ public class Sensor {
 
     public Sensor(String marca, String modelo, double precision, EstadoOperativo estado,
             LocalDateTime ultimaCalibracion, EstacionMeteorologica estacionMeteorologica) {
-        this.idSensor = java.util.UUID.randomUUID().toString();
+        this.idSensor = ++generadorId;
         this.marca = marca;
         this.modelo = modelo;
         this.precision = precision;
@@ -37,7 +40,7 @@ public class Sensor {
         this.mediciones = new ArrayList<>();
     }
 
-    public String getIdSensor() {
+    public int getIdSensor() {
         return idSensor;
     }
 
@@ -109,11 +112,70 @@ public class Sensor {
         this.mediciones = mediciones;
     }
 
-    public void registrarMedicion(LocalDateTime fecha, double milimetros, boolean anomala) {
-        this.mediciones.add(new Medicion(fecha, milimetros, anomala));
+    public Medicion obtenerUltimaMedicion() {
+        if (mediciones.isEmpty()) {
+            return null;
+        }
+        return mediciones.get(mediciones.size() - 1);
     }
 
-    public boolean necesitaCalibracion() {
+    public List<Medicion> obtenerUltimasMediciones(int cantidad) {
+        int totalMediciones = mediciones.size();
+        if (cantidad <= 0 || totalMediciones == 0) {
+            return new ArrayList<>();
+        }
+        int inicio = Math.max(0, totalMediciones - cantidad);
+        return mediciones.subList(inicio, totalMediciones);
+    }
+
+    public List<Medicion> obtenerMedicionesAnomalas() {
+        List<Medicion> medicionesAnomalas = new ArrayList<>();
+        for (Medicion medicion : mediciones) {
+            if (medicion.isAnomala()) {
+                medicionesAnomalas.add(medicion);
+            }
+        }
+        return medicionesAnomalas;
+    }
+
+    public double acumuladorEntre(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        List<Medicion> medicionesEnRango = new ArrayList<>();
+        for (Medicion medicion : mediciones) {
+            if ((medicion.getFechaHora().isEqual(fechaInicio) || medicion.getFechaHora().isAfter(fechaInicio))
+                    && (medicion.getFechaHora().isEqual(fechaFin) || medicion.getFechaHora().isBefore(fechaFin))) {
+                medicionesEnRango.add(medicion);
+            }
+        }
+        double acumulado = 0;
+        for (Medicion medicion : medicionesEnRango) {
+            acumulado += medicion.getMilimetros();
+        }
+        return acumulado;
+    }
+
+    public void calibrar(LocalDateTime fechaCalibracion) {
+        this.ultimaCalibracion = fechaCalibracion;
+    }
+
+    public void registrarMedicion(LocalDateTime fecha, double milimetros)
+            throws LecturaInvalidaException, SensorNoOperativoException, EstacionFueraDeServicioException {
+        if (!validar(milimetros)) {
+            throw new LecturaInvalidaException("Valor de milímetros inválido: " + milimetros);
+        }
+        if (this.estado != EstadoOperativo.OPERATIVA) {
+            throw new SensorNoOperativoException("El sensor no está operativo y no puede registrar mediciones.");
+        }
+        if (estacionMeteorologica == null || !estacionMeteorologica.estaOperativa()) {
+            throw new EstacionFueraDeServicioException("La estación meteorológica asociada no está operativa.");
+        }
+        Medicion anterior = obtenerUltimaMedicion();
+        boolean anomala = anterior != null && Math.abs(milimetros - anterior.getMilimetros()) > 100;
+
+        this.mediciones.add(new Medicion(fecha, milimetros, anomala));
+
+    }
+
+    public boolean requiereCalibracion() {
         if (this.ultimaCalibracion == null) {
             return true;
         } else {
@@ -126,4 +188,10 @@ public class Sensor {
         return milimetros >= 0.0 && milimetros <= 500.0;
     }
 
+    public String toString() {
+        return "Sensor [idSensor=" + idSensor + ", marca=" + marca + ", modelo=" + modelo + ", precision=" + precision
+                + ", estado=" + estado + ", ultimaCalibracion=" + ultimaCalibracion
+                + ", estacionMeteorologica="
+                + (estacionMeteorologica != null ? estacionMeteorologica.getIdEstacion() : "null") + "]";
+    }
 }

@@ -9,13 +9,13 @@ public class EquipoRespuesta {
     private String nombre;
     private boolean disponible;
     private List<Alerta> alertasAsignadas;
-    private List<ResponsableTecnico> ResponsablesAsignados;
+    private List<ResponsableTecnico> responsablesAsignados;
 
     public EquipoRespuesta() {
         this.idEquipo = generadorId++;
         this.disponible = true;
         this.alertasAsignadas = new ArrayList<>();
-        this.ResponsablesAsignados = new ArrayList<>();
+        this.responsablesAsignados = new ArrayList<>();
     }
 
     public EquipoRespuesta(String nombre, boolean disponible) {
@@ -23,7 +23,7 @@ public class EquipoRespuesta {
         this.nombre = nombre;
         this.disponible = disponible;
         this.alertasAsignadas = new ArrayList<>();
-        this.ResponsablesAsignados = new ArrayList<>();
+        this.responsablesAsignados = new ArrayList<>();
     }
 
     public int getIdEquipo() {
@@ -55,27 +55,46 @@ public class EquipoRespuesta {
     }
 
     public List<ResponsableTecnico> getResponsablesAsignados() {
-        return ResponsablesAsignados;
+        return responsablesAsignados;
     }
 
     public void setResponsablesAsignados(List<ResponsableTecnico> responsablesAsignados) {
-        ResponsablesAsignados = responsablesAsignados;
+        this.responsablesAsignados = responsablesAsignados;
     }
 
     public void agregarAlerta(Alerta alerta) {
         this.alertasAsignadas.add(alerta);
     }
 
-    public void agregarResponsable(ResponsableTecnico responsable) {
-        this.ResponsablesAsignados.add(responsable);
-    }
-
     public void eliminarAlerta(Alerta alerta) {
         this.alertasAsignadas.remove(alerta);
     }
 
-    public void agregarIntegrante(ResponsableTecnico integrante) {
-        this.ResponsablesAsignados.add(integrante);
+    public void agregarIntegrante(ResponsableTecnico i) {
+        if (i.getEquipoRespuesta() == this) {
+            return;
+        }
+        if (i.getEquipoRespuesta() != null) {
+            throw new IllegalStateException("El tecnico ya pertenece a un equipo");
+        }
+        this.responsablesAsignados.add(i);
+        i.setEquipoRespuesta(this);
+    }
+
+    public boolean tieneIntegrantes() {
+        return !this.responsablesAsignados.isEmpty();
+    }
+
+    public void quitarIntegrante(ResponsableTecnico i) {
+        if (this.responsablesAsignados.remove(i)) {
+            i.setEquipoRespuesta(null);
+        }
+    }
+
+    public String toString() {
+        return "EquipoRespuesta [idEquipo=" + idEquipo + ", nombre=" + nombre + ", disponible=" + disponible
+                + ", integrantes=" + responsablesAsignados.size() + ", alertasAsignadas=" + alertasAsignadas.size()
+                + "]";
     }
 
 }

@@ -12,16 +12,16 @@ public class ResponsableTecnico extends Persona {
 
     public ResponsableTecnico(String dni, String nombre, String apellido, String correoElectronico, String celular) {
         super(dni, nombre, apellido, correoElectronico, celular);
+        this.estacionesAsignadas = new ArrayList<>();
+        this.mantenimientosAsignados = new ArrayList<>();
     }
 
     public ResponsableTecnico(String dni, String nombre, String apellido, String correoElectronico, String celular,
             String especialidad,
             String numeroLicencia) {
-        super(dni, nombre, apellido, correoElectronico, celular);
+        this(dni, nombre, apellido, correoElectronico, celular);
         this.especialidad = especialidad;
         this.numeroLicencia = numeroLicencia;
-        this.estacionesAsignadas = new ArrayList<>();
-        this.mantenimientosAsignados = new ArrayList<>();
     }
 
     public String getEspecialidad() {
@@ -56,6 +56,22 @@ public class ResponsableTecnico extends Persona {
         this.estacionesAsignadas = estacionesAsignadas;
     }
 
+    public void agregarEstacionMeteorologica(EstacionMeteorologica estacion) {
+        this.estacionesAsignadas.add(estacion);
+    }
+
+    public void eliminarEstacionMeteorologica(EstacionMeteorologica estacion) {
+        this.estacionesAsignadas.remove(estacion);
+    }
+
+    public void agregarMantenimiento(Mantenimiento mantenimiento) {
+        this.mantenimientosAsignados.add(mantenimiento);
+    }
+
+    public boolean estaEnEquipoRespuesta() {
+        return equipoRespuesta != null;
+    }
+
     public List<Mantenimiento> getMantenimientosAsignados() {
         return mantenimientosAsignados;
     }
@@ -64,4 +80,9 @@ public class ResponsableTecnico extends Persona {
         this.mantenimientosAsignados = mantenimientosAsignados;
     }
 
+    public String toString() {
+        return "ResponsableTecnico [especialidad=" + especialidad + ", numeroLicencia=" + numeroLicencia
+                + ", equipoRespuesta="
+                + (equipoRespuesta != null ? equipoRespuesta.getIdEquipo() : "null") + "]";
+    }
 }

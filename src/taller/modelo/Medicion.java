@@ -48,4 +48,9 @@ public class Medicion {
     public void setAnomala(boolean anomala) {
         this.anomala = anomala;
     }
+
+    public String toString() {
+        return "Medicion [idMedicion=" + idMedicion + ", fechaHora=" + fechaHora + ", milimetros=" + milimetros
+                + ", anomala=" + anomala + "]";
+    }
 }

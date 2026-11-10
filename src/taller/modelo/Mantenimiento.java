@@ -12,17 +12,19 @@ public class Mantenimiento {
     private TipoMantenimiento tipo;
     private Sensor sensor;
     private ResponsableTecnico responsableTecnico;
+    private EstacionMeteorologica estacionMeteorologica;
 
     public Mantenimiento() {
         this.idMantenimiento = generadorId++;
     }
 
     public Mantenimiento(LocalDateTime fecha, String descripcion, TipoMantenimiento tipo,
-            Sensor sensor, ResponsableTecnico responsableTecnico) {
+            Sensor sensor, ResponsableTecnico responsableTecnico, EstacionMeteorologica estacionMeteorologica) {
         this.idMantenimiento = generadorId++;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.tipo = tipo;
+        this.estacionMeteorologica = estacionMeteorologica;
         this.sensor = sensor;
         this.responsableTecnico = responsableTecnico;
 
@@ -34,6 +36,14 @@ public class Mantenimiento {
 
     public LocalDateTime getFecha() {
         return fecha;
+    }
+
+    public EstacionMeteorologica getEstacionMeteorologica() {
+        return estacionMeteorologica;
+    }
+
+    public void setEstacionMeteorologica(EstacionMeteorologica estacionMeteorologica) {
+        this.estacionMeteorologica = estacionMeteorologica;
     }
 
     public void setFecha(LocalDateTime fecha) {
@@ -72,4 +82,12 @@ public class Mantenimiento {
         this.responsableTecnico = responsableTecnico;
     }
 
+    public String toString() {
+        return "Mantenimiento [idMantenimiento=" + idMantenimiento + ", fecha=" + fecha + ", descripcion=" + descripcion
+                + ", tipo=" + tipo + ", sensor=" + (sensor != null ? sensor.getIdSensor() : "null")
+                + ", responsableTecnico="
+                + (responsableTecnico != null ? responsableTecnico.getNombreCompleto() : "null")
+                + ", estacionMeteorologica="
+                + (estacionMeteorologica != null ? estacionMeteorologica.getIdEstacion() : "null") + "]";
+    }
 }

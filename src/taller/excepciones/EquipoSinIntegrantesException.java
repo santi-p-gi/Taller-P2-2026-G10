@@ -1,3 +1,4 @@
+package taller.excepciones;
 
 public class EquipoSinIntegrantesException extends RuntimeException {
     public EquipoSinIntegrantesException(String mensaje) {
