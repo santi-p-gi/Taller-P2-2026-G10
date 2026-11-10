@@ -120,12 +120,12 @@ public class Sensor {
     }
 
     public List<Medicion> obtenerUltimasMediciones(int cantidad) {
-        int totalMediciones = mediciones.size();
-        if (cantidad <= 0 || totalMediciones == 0) {
-            return new ArrayList<>();
+        List<Medicion> ultimas = new ArrayList<>();
+        int inicio = Math.max(0, mediciones.size() - cantidad);
+        for (int i = inicio; i < mediciones.size(); i++) {
+            ultimas.add(mediciones.get(i));
         }
-        int inicio = Math.max(0, totalMediciones - cantidad);
-        return mediciones.subList(inicio, totalMediciones);
+        return ultimas;
     }
 
     public List<Medicion> obtenerMedicionesAnomalas() {
@@ -157,7 +157,7 @@ public class Sensor {
         this.ultimaCalibracion = fechaCalibracion;
     }
 
-    public void registrarMedicion(LocalDateTime fecha, double milimetros)
+    public Medicion registrar(double milimetros, LocalDateTime fechaHora)
             throws LecturaInvalidaException, SensorNoOperativoException, EstacionFueraDeServicioException {
         if (!validar(milimetros)) {
             throw new LecturaInvalidaException("Valor de milímetros inválido: " + milimetros);
@@ -171,8 +171,9 @@ public class Sensor {
         Medicion anterior = obtenerUltimaMedicion();
         boolean anomala = anterior != null && Math.abs(milimetros - anterior.getMilimetros()) > 100;
 
-        this.mediciones.add(new Medicion(fecha, milimetros, anomala));
-
+        Medicion medicion = new Medicion(fechaHora, milimetros, anomala);
+        this.mediciones.add(medicion);
+        return medicion;
     }
 
     public boolean requiereCalibracion() {
