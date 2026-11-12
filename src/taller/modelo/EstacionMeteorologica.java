@@ -6,6 +6,9 @@ import java.util.List;
 import taller.enumeraciones.EstadoOperativo;
 import taller.enumeraciones.TipoEstacion;
 
+/**
+ * Estacion meteorologica de una zona, con sus sensores instalados y su responsable tecnico a cargo.
+ */
 public class EstacionMeteorologica {
     private static int generadorId;
     private int idEstacion;
@@ -21,6 +24,9 @@ public class EstacionMeteorologica {
     private List<Mantenimiento> mantenimientos;
     private ResponsableTecnico responsableTecnico;
 
+    /**
+     * Crea una estacion operativa y vacia, con ID autogenerado.
+     */
     public EstacionMeteorologica() {
         this.idEstacion = ++generadorId;
         this.estado = EstadoOperativo.OPERATIVA;
@@ -28,6 +34,20 @@ public class EstacionMeteorologica {
         this.mantenimientos = new ArrayList<>();
     }
 
+    /**
+     * Crea una estacion con ID autogenerado. No actualiza la zona ni el responsable: para eso usar
+     * {@link ZonaGeografica#agregarEstacionMeteorologica} y {@link #asignarResponsableTecnico}.
+     *
+     * @param direccion          direccion de la estacion
+     * @param nombre             nombre de la estacion
+     * @param latitud            latitud
+     * @param longitud           longitud
+     * @param altitud            altitud en metros
+     * @param estado             estado operativo inicial
+     * @param type               tipo de estacion
+     * @param zonaGeografica     zona a la que pertenece
+     * @param responsableTecnico tecnico a cargo
+     */
     public EstacionMeteorologica(String direccion, String nombre, Double latitud, Double longitud, double altitud,
             EstadoOperativo estado, TipoEstacion type, ZonaGeografica zonaGeografica,
             ResponsableTecnico responsableTecnico) {
@@ -130,10 +150,22 @@ public class EstacionMeteorologica {
         this.mantenimientos = mantenimientos;
     }
 
+    /**
+     * Agrega un mantenimiento al historial de la estacion.
+     *
+     * @param mantenimiento mantenimiento a agregar
+     */
     public void agregarMantenimiento(Mantenimiento mantenimiento) {
         this.mantenimientos.add(mantenimiento);
     }
 
+    /**
+     * Suma los milimetros registrados por todos los sensores de la estacion en un rango de fechas.
+     *
+     * @param fechaInicio inicio del rango (incluido)
+     * @param fechaFin    fin del rango (incluido)
+     * @return milimetros acumulados
+     */
     public double acumuladoEntreSensores(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         double acumulado = 0.0;
         for (Sensor sensor : sensores) {
@@ -146,6 +178,11 @@ public class EstacionMeteorologica {
         return responsableTecnico;
     }
 
+    /**
+     * Pone la estacion a cargo de un tecnico, actualizando tambien al responsable anterior y al nuevo.
+     *
+     * @param responsableTecnico nuevo responsable
+     */
     public void asignarResponsableTecnico(ResponsableTecnico responsableTecnico) {
         if (this.responsableTecnico != null) {
             this.responsableTecnico.eliminarEstacionMeteorologica(this);
@@ -154,21 +191,37 @@ public class EstacionMeteorologica {
         this.responsableTecnico.agregarEstacionMeteorologica(this);
     }
 
+    /**
+     * Instala un sensor en la estacion (asignacion unica).
+     *
+     * @param sensor sensor a instalar
+     * @throws IllegalStateException si el sensor ya esta instalado en una estacion
+     */
     public void instalarSensor(Sensor sensor) {
         if (sensor.getEstacionMeteorologica() != null) {
             throw new IllegalStateException("El sensor " + sensor.getIdSensor()
-                    + " ya está instalado en la estación " + sensor.getEstacionMeteorologica().getIdEstacion() + ".");
+                    + " ya esta instalado en la estacion " + sensor.getEstacionMeteorologica().getIdEstacion() + ".");
         }
         this.sensores.add(sensor);
         sensor.setEstacionMeteorologica(this);
     }
 
+    /**
+     * Retira un sensor de la estacion, si estaba instalado en ella.
+     *
+     * @param sensor sensor a retirar
+     */
     public void retirarSensor(Sensor sensor) {
         if (this.sensores.remove(sensor)) {
             sensor.setEstacionMeteorologica(null);
         }
     }
 
+    /**
+     * Indica si la estacion esta operativa.
+     *
+     * @return true si su estado es OPERATIVA
+     */
     public boolean estaOperativa() {
         return this.estado == EstadoOperativo.OPERATIVA;
     }

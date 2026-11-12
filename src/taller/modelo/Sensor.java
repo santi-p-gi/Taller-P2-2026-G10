@@ -8,6 +8,10 @@ import taller.excepciones.EstacionFueraDeServicioException;
 import taller.excepciones.LecturaInvalidaException;
 import taller.excepciones.SensorNoOperativoException;
 
+/**
+ * Pluviometro que registra lecturas de precipitacion. Puede estar instalado en a lo sumo una estacion
+ * y compone su historial de mediciones.
+ */
 public class Sensor {
     private static int generadorId;
     private int idSensor;
@@ -20,6 +24,9 @@ public class Sensor {
     private List<Mantenimiento> mantenimientos;
     private List<Medicion> mediciones;
 
+    /**
+     * Crea un sensor operativo y sin instalar, con ID autogenerado.
+     */
     public Sensor() {
         this.idSensor = ++generadorId;
         this.estado = EstadoOperativo.OPERATIVA;
@@ -27,6 +34,16 @@ public class Sensor {
         this.mediciones = new ArrayList<>();
     }
 
+    /**
+     * Crea un sensor con ID autogenerado.
+     *
+     * @param marca                 marca
+     * @param modelo                modelo
+     * @param precision             precision de medicion, en mm
+     * @param estado                estado operativo inicial
+     * @param ultimaCalibracion     fecha de la ultima calibracion
+     * @param estacionMeteorologica estacion donde esta instalado, o null
+     */
     public Sensor(String marca, String modelo, double precision, EstadoOperativo estado,
             LocalDateTime ultimaCalibracion, EstacionMeteorologica estacionMeteorologica) {
         this.idSensor = ++generadorId;
@@ -100,6 +117,11 @@ public class Sensor {
         this.mantenimientos = mantenimientos;
     }
 
+    /**
+     * Agrega un mantenimiento al historial del sensor.
+     *
+     * @param mantenimiento mantenimiento a agregar
+     */
     public void agregarMantenimiento(Mantenimiento mantenimiento) {
         this.mantenimientos.add(mantenimiento);
     }
@@ -112,6 +134,11 @@ public class Sensor {
         this.mediciones = mediciones;
     }
 
+    /**
+     * Devuelve la ultima medicion registrada.
+     *
+     * @return la ultima medicion, o null si no tiene mediciones
+     */
     public Medicion obtenerUltimaMedicion() {
         if (mediciones.isEmpty()) {
             return null;
@@ -119,6 +146,12 @@ public class Sensor {
         return mediciones.get(mediciones.size() - 1);
     }
 
+    /**
+     * Devuelve las ultimas mediciones registradas, de la mas antigua a la mas reciente.
+     *
+     * @param cantidad cantidad maxima de mediciones a devolver
+     * @return lista con las ultimas mediciones
+     */
     public List<Medicion> obtenerUltimasMediciones(int cantidad) {
         List<Medicion> ultimas = new ArrayList<>();
         int inicio = Math.max(0, mediciones.size() - cantidad);
@@ -128,6 +161,11 @@ public class Sensor {
         return ultimas;
     }
 
+    /**
+     * Devuelve las mediciones marcadas como anomalas.
+     *
+     * @return lista de mediciones anomalas
+     */
     public List<Medicion> obtenerMedicionesAnomalas() {
         List<Medicion> medicionesAnomalas = new ArrayList<>();
         for (Medicion medicion : mediciones) {
@@ -138,6 +176,13 @@ public class Sensor {
         return medicionesAnomalas;
     }
 
+    /**
+     * Suma los milimetros registrados en un rango de fechas.
+     *
+     * @param fechaInicio inicio del rango (incluido)
+     * @param fechaFin    fin del rango (incluido)
+     * @return milimetros acumulados
+     */
     public double acumuladorEntre(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         List<Medicion> medicionesEnRango = new ArrayList<>();
         for (Medicion medicion : mediciones) {
@@ -153,20 +198,36 @@ public class Sensor {
         return acumulado;
     }
 
+    /**
+     * Registra una calibracion del sensor.
+     *
+     * @param fechaCalibracion fecha de la calibracion
+     */
     public void calibrar(LocalDateTime fechaCalibracion) {
         this.ultimaCalibracion = fechaCalibracion;
     }
 
+    /**
+     * Registra una lectura de precipitacion. Si difiere en mas de 100 mm de la anterior, queda marcada
+     * como anomala.
+     *
+     * @param milimetros milimetros registrados
+     * @param fechaHora  fecha y hora de la lectura
+     * @return la medicion registrada
+     * @throws LecturaInvalidaException          si el valor no esta entre 0 y 500 mm
+     * @throws SensorNoOperativoException        si el sensor no esta operativo
+     * @throws EstacionFueraDeServicioException si el sensor no esta instalado o su estacion no esta operativa
+     */
     public Medicion registrar(double milimetros, LocalDateTime fechaHora)
             throws LecturaInvalidaException, SensorNoOperativoException, EstacionFueraDeServicioException {
         if (!validar(milimetros)) {
-            throw new LecturaInvalidaException("Valor de milímetros inválido: " + milimetros);
+            throw new LecturaInvalidaException("Valor de milimetros invalido: " + milimetros);
         }
         if (this.estado != EstadoOperativo.OPERATIVA) {
-            throw new SensorNoOperativoException("El sensor no está operativo y no puede registrar mediciones.");
+            throw new SensorNoOperativoException("El sensor no esta operativo y no puede registrar mediciones.");
         }
         if (estacionMeteorologica == null || !estacionMeteorologica.estaOperativa()) {
-            throw new EstacionFueraDeServicioException("La estación meteorológica asociada no está operativa.");
+            throw new EstacionFueraDeServicioException("La estacion meteorologica asociada no esta operativa.");
         }
         Medicion anterior = obtenerUltimaMedicion();
         boolean anomala = anterior != null && Math.abs(milimetros - anterior.getMilimetros()) > 100;
@@ -176,6 +237,11 @@ public class Sensor {
         return medicion;
     }
 
+    /**
+     * Indica si pasaron mas de 12 meses desde la ultima calibracion, o si nunca se calibro.
+     *
+     * @return true si requiere calibracion
+     */
     public boolean requiereCalibracion() {
         if (this.ultimaCalibracion == null) {
             return true;
@@ -185,6 +251,12 @@ public class Sensor {
         }
     }
 
+    /**
+     * Valida que una lectura este dentro del rango fisico admitido.
+     *
+     * @param milimetros valor a validar
+     * @return true si esta entre 0 y 500 mm
+     */
     public boolean validar(double milimetros) {
         return milimetros >= 0.0 && milimetros <= 500.0;
     }

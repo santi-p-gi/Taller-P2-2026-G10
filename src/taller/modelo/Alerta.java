@@ -7,6 +7,9 @@ import taller.enumeraciones.TipoEventoClimatico;
 import taller.excepciones.AlertaYaAtendidaException;
 import taller.excepciones.EquipoSinIntegrantesException;
 
+/**
+ * Alerta emitida por una zona geografica. Las de nivel NARANJA o ROJA requieren un equipo de respuesta.
+ */
 public class Alerta {
     private static int generadorId;
     private final int idAlerta;
@@ -18,14 +21,27 @@ public class Alerta {
     private ZonaGeografica zonaGeografica;
     private boolean atendida;
 
+    /**
+     * Crea una alerta vacia con ID autogenerado.
+     */
     public Alerta() {
-        this.idAlerta = generadorId++;
+        this.idAlerta = ++generadorId;
     }
 
+    /**
+     * Crea una alerta no atendida. Si se indica un equipo y el nivel lo requiere, se le asigna.
+     *
+     * @param fechaHora       fecha y hora de emision
+     * @param nivel           nivel de severidad
+     * @param tipoEvento      tipo de evento climatico
+     * @param descripcion     descripcion de la alerta
+     * @param equipoRespuesta equipo a asignar, o null si todavia no tiene
+     * @param zonaGeografica  zona que emite la alerta
+     */
     public Alerta(LocalDateTime fechaHora, NivelAlerta nivel,
             TipoEventoClimatico tipoEvento, String descripcion, EquipoRespuesta equipoRespuesta,
             ZonaGeografica zonaGeografica) {
-        this.idAlerta = generadorId++;
+        this.idAlerta = ++generadorId;
         this.fechaHora = fechaHora;
         this.nivel = nivel;
         this.tipoEvento = tipoEvento;
@@ -93,6 +109,14 @@ public class Alerta {
         return atendida;
     }
 
+    /**
+     * Asigna un equipo de respuesta a la alerta y lo deja no disponible.
+     *
+     * @param e equipo a asignar
+     * @throws IllegalStateException         si la alerta no requiere equipo o el equipo no esta disponible
+     * @throws IllegalArgumentException      si el equipo es null
+     * @throws EquipoSinIntegrantesException si el equipo no tiene integrantes
+     */
     public void asignarEquipo(EquipoRespuesta e) throws IllegalStateException, EquipoSinIntegrantesException {
         if (!requiereEquipoRespuesta()) {
             throw new IllegalStateException("La alerta no requiere de un equipo de respuesta");
@@ -111,10 +135,20 @@ public class Alerta {
         e.setDisponible(false);
     }
 
+    /**
+     * Indica si la alerta requiere un equipo y todavia no tiene uno asignado.
+     *
+     * @return true si esta pendiente de equipo
+     */
     public boolean estaPendienteDeEquipo() {
         return requiereEquipoRespuesta() && equipoRespuesta == null;
     }
 
+    /**
+     * Marca la alerta como atendida y libera a su equipo de respuesta, si tenia.
+     *
+     * @throws AlertaYaAtendidaException si la alerta ya estaba atendida
+     */
     public void marcarAtendida() throws AlertaYaAtendidaException {
         if (atendida) {
             throw new AlertaYaAtendidaException("La alerta ya fue atendida");
@@ -125,6 +159,11 @@ public class Alerta {
         }
     }
 
+    /**
+     * Indica si el nivel de la alerta exige un equipo de respuesta (NARANJA o ROJA).
+     *
+     * @return true si requiere equipo
+     */
     public boolean requiereEquipoRespuesta() {
         return this.nivel == NivelAlerta.ROJA || this.nivel == NivelAlerta.NARANJA;
     }

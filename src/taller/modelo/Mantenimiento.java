@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 
 import taller.enumeraciones.TipoMantenimiento;
 
+/**
+ * Mantenimiento realizado por un responsable tecnico sobre una estacion, y opcionalmente sobre un sensor
+ * puntual de esa estacion.
+ */
 public class Mantenimiento {
     private static int generadorId;
     private final int idMantenimiento;
@@ -14,13 +18,26 @@ public class Mantenimiento {
     private ResponsableTecnico responsableTecnico;
     private EstacionMeteorologica estacionMeteorologica;
 
+    /**
+     * Crea un mantenimiento vacio con ID autogenerado.
+     */
     public Mantenimiento() {
-        this.idMantenimiento = generadorId++;
+        this.idMantenimiento = ++generadorId;
     }
 
+    /**
+     * Crea un mantenimiento con ID autogenerado.
+     *
+     * @param fecha                 fecha en que se realizo
+     * @param descripcion           detalle del trabajo realizado
+     * @param tipo                  tipo de mantenimiento
+     * @param sensor                sensor intervenido, o null si es de la estacion en general
+     * @param responsableTecnico    tecnico que lo realizo
+     * @param estacionMeteorologica estacion a la que pertenece
+     */
     public Mantenimiento(LocalDateTime fecha, String descripcion, TipoMantenimiento tipo,
             Sensor sensor, ResponsableTecnico responsableTecnico, EstacionMeteorologica estacionMeteorologica) {
-        this.idMantenimiento = generadorId++;
+        this.idMantenimiento = ++generadorId;
         this.fecha = fecha;
         this.descripcion = descripcion;
         this.tipo = tipo;

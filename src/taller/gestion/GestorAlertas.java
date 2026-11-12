@@ -10,15 +10,31 @@ import taller.modelo.Alerta;
 import taller.modelo.EquipoRespuesta;
 import taller.modelo.ZonaGeografica;
 
+/**
+ * Sistema de alerta temprana: umbrales por zona, alertas de operador y asignacion de equipos de respuesta.
+ */
 public class GestorAlertas {
     private RegistroDatos registro;
 
+    /**
+     * Crea el gestor sobre el registro de datos del sistema.
+     *
+     * @param registro registro de datos compartido
+     */
     public GestorAlertas(RegistroDatos registro) {
         this.registro = registro;
     }
 
     // ---------- Umbrales ----------
 
+    /**
+     * Configura los umbrales de lluvia en 24 horas de una zona.
+     *
+     * @param idZona  ID de la zona
+     * @param amarilla umbral del nivel AMARILLA, en mm
+     * @param naranja  umbral del nivel NARANJA, en mm
+     * @param roja     umbral del nivel ROJA, en mm
+     */
     public void configurarUmbrales(int idZona, double amarilla, double naranja, double roja) {
         ZonaGeografica zona = buscarZona(idZona);
         zona.configurarUmbrales(amarilla, naranja, roja);
@@ -26,6 +42,18 @@ public class GestorAlertas {
 
     // ---------- Registro de alertas ----------
 
+    /**
+     * Registra una alerta de CRECIDA_RIO o TORMENTA_SEVERA cargada por un operador.
+     *
+     * @param idZona      ID de la zona afectada
+     * @param tipo        tipo de evento
+     * @param nivel       nivel de severidad
+     * @param descripcion descripcion de la alerta
+     * @param fechaHora   fecha y hora de emision
+     * @param idEquipo    ID del equipo a asignar, o null (obligatorio si el nivel es NARANJA o ROJA)
+     * @return la alerta registrada
+     * @throws IllegalArgumentException si el tipo es LLUVIA_COPIOSA o falta el equipo requerido
+     */
     public Alerta registrarAlertaOperador(int idZona, TipoEventoClimatico tipo, NivelAlerta nivel, String descripcion,
             LocalDateTime fechaHora, Integer idEquipo) {
         if (tipo == TipoEventoClimatico.LLUVIA_COPIOSA) {
@@ -50,12 +78,23 @@ public class GestorAlertas {
 
     // ---------- Gestion de alertas ----------
 
+    /**
+     * Asigna un equipo de respuesta a una alerta.
+     *
+     * @param idAlerta ID de la alerta
+     * @param idEquipo ID del equipo
+     */
     public void asignarEquipo(int idAlerta, int idEquipo) {
         Alerta alerta = buscarAlerta(idAlerta);
         EquipoRespuesta equipo = buscarEquipo(idEquipo);
         alerta.asignarEquipo(equipo);
     }
 
+    /**
+     * Marca una alerta como atendida y libera a su equipo.
+     *
+     * @param idAlerta ID de la alerta
+     */
     public void marcarAtendida(int idAlerta) {
         Alerta alerta = buscarAlerta(idAlerta);
         alerta.marcarAtendida();
@@ -63,6 +102,13 @@ public class GestorAlertas {
 
     // ---------- Consultas ----------
 
+    /**
+     * Busca una alerta por su ID entre las alertas de todas las zonas.
+     *
+     * @param idAlerta ID de la alerta
+     * @return la alerta
+     * @throws IllegalArgumentException si no existe
+     */
     public Alerta buscarAlerta(int idAlerta) {
         List<ZonaGeografica> zonas = registro.getZonasGeograficas();
         for (ZonaGeografica z : zonas) {
@@ -72,9 +118,14 @@ public class GestorAlertas {
                 }
             }
         }
-        throw new IllegalArgumentException("No se encontró la alerta con ID: " + idAlerta);
+        throw new IllegalArgumentException("No se encontro la alerta con ID: " + idAlerta);
     }
 
+    /**
+     * Devuelve las alertas de todas las zonas.
+     *
+     * @return lista de alertas
+     */
     public List<Alerta> listarAlertas() {
         List<Alerta> todasLasAlertas = new ArrayList<>();
         List<ZonaGeografica> todasLasZonas = registro.getZonasGeograficas();
@@ -85,6 +136,11 @@ public class GestorAlertas {
         return todasLasAlertas;
     }
 
+    /**
+     * Devuelve las alertas NARANJA o ROJA que todavia no tienen equipo asignado.
+     *
+     * @return alertas pendientes de equipo
+     */
     public List<Alerta> listarPendientesDeEquipo() {
         List<Alerta> pendientes = new ArrayList<>();
 
@@ -97,6 +153,11 @@ public class GestorAlertas {
         return pendientes;
     }
 
+    /**
+     * Devuelve las alertas que todavia no fueron atendidas.
+     *
+     * @return alertas no atendidas
+     */
     public List<Alerta> listarNoAtendidas() {
         List<Alerta> noAtendidas = new ArrayList<>();
 
