@@ -17,6 +17,9 @@ public class Consola {
             .withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter FORMATO_FECHA_HORA = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm")
             .withResolverStyle(ResolverStyle.STRICT);
+    // rango de anios aceptado en las fechas, para rechazar valores como 0000 o +12026
+    private static final int ANIO_MINIMO = 1900;
+    private static final int ANIO_MAXIMO = 9999;
 
     private Scanner scanner;
 
@@ -136,7 +139,10 @@ public class Consola {
             System.out.print(mensaje + " (dd/MM/yyyy): ");
             String linea = scanner.nextLine().trim();
             try {
-                return LocalDate.parse(linea, FORMATO_FECHA);
+                LocalDate fecha = LocalDate.parse(linea, FORMATO_FECHA);
+                if (anioValido(fecha.getYear())) {
+                    return fecha;
+                }
             } catch (DateTimeParseException e) {
                 System.out.println("Fecha invalida.");
             }
@@ -157,7 +163,10 @@ public class Consola {
                 return null;
             }
             try {
-                return LocalDate.parse(linea, FORMATO_FECHA);
+                LocalDate fecha = LocalDate.parse(linea, FORMATO_FECHA);
+                if (anioValido(fecha.getYear())) {
+                    return fecha;
+                }
             } catch (DateTimeParseException e) {
                 System.out.println("Fecha invalida.");
             }
@@ -175,11 +184,23 @@ public class Consola {
             System.out.print(mensaje + " (dd/MM/yyyy HH:mm): ");
             String linea = scanner.nextLine().trim();
             try {
-                return LocalDateTime.parse(linea, FORMATO_FECHA_HORA);
+                LocalDateTime fechaHora = LocalDateTime.parse(linea, FORMATO_FECHA_HORA);
+                if (anioValido(fechaHora.getYear())) {
+                    return fechaHora;
+                }
             } catch (DateTimeParseException e) {
                 System.out.println("Fecha y hora invalidas.");
             }
         }
+    }
+
+    // informa si el anio esta fuera de rango; la fecha mal escrita se informa en cada metodo
+    private boolean anioValido(int anio) {
+        if (anio >= ANIO_MINIMO && anio <= ANIO_MAXIMO) {
+            return true;
+        }
+        System.out.println("El anio debe estar entre " + ANIO_MINIMO + " y " + ANIO_MAXIMO + ".");
+        return false;
     }
 
     /**
