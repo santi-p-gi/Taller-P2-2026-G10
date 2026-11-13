@@ -46,7 +46,9 @@ public class GestorMediciones {
                     "La estacion con ID " + estacion.getIdEstacion() + " no esta asociada a ninguna zona geografica");
         }
         sensor.registrar(milimetros, fecha);
-        Alerta alerta = zona.actualizarNivelAlerta(fecha, "Actualizacion de nivel de alerta", null);
+        String descripcion = "Lluvia acumulada en 24 hs de " + String.format("%.1f", zona.lluviaAcumulada24hs(fecha))
+                + " mm, supero el umbral " + zona.evaluarRiesgo(fecha);
+        Alerta alerta = zona.actualizarNivelAlerta(fecha, descripcion, null);
         return alerta;
     }
 

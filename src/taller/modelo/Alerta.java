@@ -41,6 +41,9 @@ public class Alerta {
     public Alerta(LocalDateTime fechaHora, NivelAlerta nivel,
             TipoEventoClimatico tipoEvento, String descripcion, EquipoRespuesta equipoRespuesta,
             ZonaGeografica zonaGeografica) {
+        if (fechaHora.isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("La fecha de la alerta no puede ser posterior a la fecha actual.");
+        }
         this.idAlerta = ++generadorId;
         this.fechaHora = fechaHora;
         this.nivel = nivel;
@@ -148,10 +151,15 @@ public class Alerta {
      * Marca la alerta como atendida y libera a su equipo de respuesta, si tenia.
      *
      * @throws AlertaYaAtendidaException si la alerta ya estaba atendida
+     * @throws IllegalStateException     si es NARANJA o ROJA y no tiene equipo asignado
      */
     public void marcarAtendida() throws AlertaYaAtendidaException {
         if (atendida) {
             throw new AlertaYaAtendidaException("La alerta ya fue atendida");
+        }
+        if (requiereEquipoRespuesta() && equipoRespuesta == null) {
+            throw new IllegalStateException(
+                    "La alerta requiere un equipo de respuesta asignado antes de marcarla como atendida.");
         }
         atendida = true;
         if (this.equipoRespuesta != null) {

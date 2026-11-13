@@ -48,6 +48,9 @@ public class ZonaGeografica {
      */
     public ZonaGeografica(String nombre, NivelVulnerabilidad nivelVulnerabilidad,
             NivelAlerta nivelAlertaActual) {
+        if (nombre == null || !nombre.matches(".*\\p{L}.*")) {
+            throw new IllegalArgumentException("El nombre de la zona debe contener al menos una letra.");
+        }
         this.idZona = ++generadorId;
         this.nombre = nombre;
         this.nivelVulnerabilidad = nivelVulnerabilidad;
@@ -167,6 +170,18 @@ public class ZonaGeografica {
         this.umbralAmarilla = umbralAmarilla;
         this.umbralNaranja = umbralNaranja;
         this.umbralRoja = umbralRoja;
+    }
+
+    public double getUmbralAmarilla() {
+        return umbralAmarilla;
+    }
+
+    public double getUmbralNaranja() {
+        return umbralNaranja;
+    }
+
+    public double getUmbralRoja() {
+        return umbralRoja;
     }
 
     /**

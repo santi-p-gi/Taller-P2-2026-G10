@@ -25,7 +25,7 @@ public class ValorHistorico {
             throw new IllegalArgumentException("El mes debe estar entre 1 y 12.");
         }
         this.mes = mes;
-        this.acumuladoMedio = acumuladoMedio;
+        setAcumuladoMedio(acumuladoMedio);
     }
 
     public int getMes() {
@@ -41,6 +41,9 @@ public class ValorHistorico {
     }
 
     public void setAcumuladoMedio(double acumuladoMedio) {
+        if (!(acumuladoMedio >= 0)) {
+            throw new IllegalArgumentException("El acumulado medio no puede ser negativo.");
+        }
         this.acumuladoMedio = acumuladoMedio;
     }
 

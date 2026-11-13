@@ -18,8 +18,25 @@ public abstract class Persona {
      * @param apellido          apellido
      * @param correoElectronico correo electronico
      * @param celular           numero de celular
+     * @throws IllegalArgumentException si algun dato no tiene un formato valido
      */
     public Persona(String dni, String nombre, String apellido, String correoElectronico, String celular) {
+        if (dni == null || !dni.matches("\\d{7,8}")) {
+            throw new IllegalArgumentException("El DNI debe tener 7 u 8 digitos, sin puntos.");
+        }
+        if (nombre == null || !nombre.matches("[\\p{L} ]+")) {
+            throw new IllegalArgumentException("El nombre solo puede contener letras y espacios.");
+        }
+        if (apellido == null || !apellido.matches("[\\p{L} ]+")) {
+            throw new IllegalArgumentException("El apellido solo puede contener letras y espacios.");
+        }
+        if (correoElectronico == null || !correoElectronico.matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
+            throw new IllegalArgumentException("El correo electronico debe tener el formato usuario@dominio.com.");
+        }
+        if (celular == null || !celular.matches("\\+?[0-9][0-9 -]{6,18}[0-9]")) {
+            throw new IllegalArgumentException(
+                    "El celular solo puede contener numeros, espacios y guiones (minimo 8 caracteres).");
+        }
         this.dni = dni;
         this.nombre = nombre;
         this.apellido = apellido;

@@ -1,21 +1,22 @@
 package taller.ihc;
 
-import java.util.Scanner;
-
 import taller.gestion.GestorAlertas;
 import taller.gestion.GestorInfraestructura;
 import taller.gestion.GestorMediciones;
 import taller.gestion.GestorPersonal;
+import taller.gestion.GestorReportes;
 
 /**
- * Menu principal del sistema. Muestra los modulos disponibles y deriva a cada submenu.
+ * Menu principal del sistema. Muestra los modulos disponibles y deriva a cada
+ * submenu.
  */
 public class MenuPrincipal {
     private GestorInfraestructura gestorInfraestructura;
     private GestorPersonal gestorPersonal;
     private GestorMediciones gestorMediciones;
     private GestorAlertas gestorAlertas;
-    private Scanner scanner;
+    private GestorReportes gestorReportes;
+    private Consola consola;
 
     /**
      * Crea el menu principal con los gestores del sistema.
@@ -24,14 +25,16 @@ public class MenuPrincipal {
      * @param gestorPersonal        gestor de personal tecnico
      * @param gestorMediciones      gestor de mediciones
      * @param gestorAlertas         gestor de alertas
+     * @param gestorReportes        gestor de reportes
      */
     public MenuPrincipal(GestorInfraestructura gestorInfraestructura, GestorPersonal gestorPersonal,
-            GestorMediciones gestorMediciones, GestorAlertas gestorAlertas) {
+            GestorMediciones gestorMediciones, GestorAlertas gestorAlertas, GestorReportes gestorReportes) {
         this.gestorInfraestructura = gestorInfraestructura;
         this.gestorPersonal = gestorPersonal;
         this.gestorMediciones = gestorMediciones;
         this.gestorAlertas = gestorAlertas;
-        this.scanner = new Scanner(System.in);
+        this.gestorReportes = gestorReportes;
+        this.consola = new Consola();
     }
 
     /**
@@ -41,22 +44,23 @@ public class MenuPrincipal {
         int opcion;
         do {
             mostrarOpciones();
-            opcion = leerOpcion();
+            opcion = consola.leerEntero("Seleccione una opcion: ");
             switch (opcion) {
                 case 1:
-                    System.out.println("Gestion de infraestructura: en construccion.");
+                    new MenuInfraestructura(consola, gestorInfraestructura, gestorPersonal).iniciar();
                     break;
                 case 2:
-                    System.out.println("Administracion de personal tecnico: en construccion.");
+                    new MenuPersonal(consola, gestorPersonal, gestorInfraestructura).iniciar();
                     break;
                 case 3:
-                    System.out.println("Registro de mediciones: en construccion.");
+                    new MenuMediciones(consola, gestorMediciones, gestorInfraestructura, gestorAlertas,
+                            gestorPersonal).iniciar();
                     break;
                 case 4:
-                    System.out.println("Sistema de alerta temprana: en construccion.");
+                    new MenuAlertas(consola, gestorAlertas, gestorInfraestructura, gestorPersonal).iniciar();
                     break;
                 case 5:
-                    System.out.println("Informes y reportes: en construccion.");
+                    new MenuReportes(consola, gestorReportes, gestorInfraestructura).iniciar();
                     break;
                 case 0:
                     System.out.println("Saliendo del sistema...");
@@ -78,15 +82,5 @@ public class MenuPrincipal {
         System.out.println("4. Sistema de alerta temprana");
         System.out.println("5. Informes y reportes");
         System.out.println("0. Salir");
-        System.out.print("Seleccione una opcion: ");
-    }
-
-    private int leerOpcion() {
-        String linea = scanner.nextLine();
-        try {
-            return Integer.parseInt(linea.trim());
-        } catch (NumberFormatException e) {
-            return -1;
-        }
     }
 }

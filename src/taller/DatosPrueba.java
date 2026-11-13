@@ -46,9 +46,6 @@ public class DatosPrueba {
         ZonaGeografica pampeana = infra.registrarZona("Llanura Pampeana Norte", NivelVulnerabilidad.MEDIA);
         ZonaGeografica sierras = infra.registrarZona("Sierras del Sur", NivelVulnerabilidad.BAJA);
 
-        // La zona mas vulnerable usa umbrales mas exigentes; las demas quedan con 50/100/150
-        alertas.configurarUmbrales(salado.getIdZona(), 40, 80, 120);
-
         // ---------- Valores historicos (enero a diciembre) ----------
         cargarHistoricos(infra, salado.getIdZona(),
                 new double[] { 110, 105, 120, 90, 60, 40, 35, 40, 55, 95, 105, 115 });
@@ -154,11 +151,11 @@ public class DatosPrueba {
         mediciones.registrarLectura(s8.getIdSensor(), 4, fecha(2026, 11, 4, 10));
 
         // Temporal en la Cuenca del Salado: la zona sube de VERDE a ROJA en el dia
-        mediciones.registrarLectura(s2.getIdSensor(), 20, fecha(2026, 11, 5, 6));
-        mediciones.registrarLectura(s3.getIdSensor(), 25, fecha(2026, 11, 5, 9)); // 45 mm -> AMARILLA
-        Alerta alertaNaranja = mediciones.registrarLectura(s2.getIdSensor(), 40, fecha(2026, 11, 5, 12)); // 85 mm
+        mediciones.registrarLectura(s2.getIdSensor(), 25, fecha(2026, 11, 5, 6));
+        mediciones.registrarLectura(s3.getIdSensor(), 30, fecha(2026, 11, 5, 9)); // 55 mm -> AMARILLA
+        Alerta alertaNaranja = mediciones.registrarLectura(s2.getIdSensor(), 50, fecha(2026, 11, 5, 12)); // 105 mm
         // 115 mm contra 10 mm de la lectura anterior de s1: queda marcada como anomala
-        Alerta alertaRoja = mediciones.registrarLectura(s1.getIdSensor(), 115, fecha(2026, 11, 5, 15)); // 200 mm
+        Alerta alertaRoja = mediciones.registrarLectura(s1.getIdSensor(), 115, fecha(2026, 11, 5, 15)); // 220 mm
 
         // Lluvias en el Delta: la zona llega a AMARILLA
         mediciones.registrarLectura(s4.getIdSensor(), 30, fecha(2026, 11, 6, 10));

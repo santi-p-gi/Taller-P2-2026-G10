@@ -159,6 +159,10 @@ public class GestorPersonal {
     public void eliminarIntegranteDeEquipo(int idEquipo, String dniResponsable) {
         EquipoRespuesta equipo = buscarEquipoPorId(idEquipo);
         ResponsableTecnico responsable = buscarResponsablePorDni(dniResponsable);
+        if (responsable.getEquipoRespuesta() != equipo) {
+            throw new IllegalArgumentException("El responsable con DNI " + dniResponsable
+                    + " no integra el equipo " + idEquipo);
+        }
         equipo.quitarIntegrante(responsable);
     }
 

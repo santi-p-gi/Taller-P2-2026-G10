@@ -37,6 +37,9 @@ public class Mantenimiento {
      */
     public Mantenimiento(LocalDateTime fecha, String descripcion, TipoMantenimiento tipo,
             Sensor sensor, ResponsableTecnico responsableTecnico, EstacionMeteorologica estacionMeteorologica) {
+        if (fecha.isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("La fecha del mantenimiento no puede ser posterior a la fecha actual.");
+        }
         this.idMantenimiento = ++generadorId;
         this.fecha = fecha;
         this.descripcion = descripcion;

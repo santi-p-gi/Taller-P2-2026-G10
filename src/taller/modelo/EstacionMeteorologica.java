@@ -51,6 +51,15 @@ public class EstacionMeteorologica {
     public EstacionMeteorologica(String direccion, String nombre, Double latitud, Double longitud, double altitud,
             EstadoOperativo estado, TipoEstacion type, ZonaGeografica zonaGeografica,
             ResponsableTecnico responsableTecnico) {
+        if (nombre == null || !nombre.matches(".*\\p{L}.*")) {
+            throw new IllegalArgumentException("El nombre de la estacion debe contener al menos una letra.");
+        }
+        if (latitud == null || latitud < -90 || latitud > 90) {
+            throw new IllegalArgumentException("La latitud debe estar entre -90 y 90.");
+        }
+        if (longitud == null || longitud < -180 || longitud > 180) {
+            throw new IllegalArgumentException("La longitud debe estar entre -180 y 180.");
+        }
         this.idEstacion = ++generadorId;
         this.direccion = direccion;
         this.nombre = nombre;

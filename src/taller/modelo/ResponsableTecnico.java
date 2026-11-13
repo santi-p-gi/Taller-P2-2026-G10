@@ -44,6 +44,9 @@ public class ResponsableTecnico extends Persona {
             String especialidad,
             String numeroLicencia) {
         this(dni, nombre, apellido, correoElectronico, celular);
+        if (especialidad == null || !especialidad.matches("[\\p{L} ]+")) {
+            throw new IllegalArgumentException("La especialidad solo puede contener letras y espacios.");
+        }
         this.especialidad = especialidad;
         this.numeroLicencia = numeroLicencia;
     }

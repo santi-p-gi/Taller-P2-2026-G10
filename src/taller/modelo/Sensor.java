@@ -1,6 +1,7 @@
 package taller.modelo;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import taller.enumeraciones.EstadoOperativo;
@@ -46,6 +47,10 @@ public class Sensor {
      */
     public Sensor(String marca, String modelo, double precision, EstadoOperativo estado,
             LocalDateTime ultimaCalibracion, EstacionMeteorologica estacionMeteorologica) {
+        if (!(precision > 0)) {
+            throw new IllegalArgumentException("La precision debe ser mayor a 0.");
+        }
+        validarFechaCalibracion(ultimaCalibracion);
         this.idSensor = ++generadorId;
         this.marca = marca;
         this.modelo = modelo;
@@ -204,7 +209,14 @@ public class Sensor {
      * @param fechaCalibracion fecha de la calibracion
      */
     public void calibrar(LocalDateTime fechaCalibracion) {
+        validarFechaCalibracion(fechaCalibracion);
         this.ultimaCalibracion = fechaCalibracion;
+    }
+
+    private void validarFechaCalibracion(LocalDateTime fecha) {
+        if (fecha != null && fecha.isAfter(LocalDateTime.now())) {
+            throw new IllegalArgumentException("La fecha de calibracion no puede ser posterior a la fecha actual.");
+        }
     }
 
     /**
@@ -229,7 +241,14 @@ public class Sensor {
         if (estacionMeteorologica == null || !estacionMeteorologica.estaOperativa()) {
             throw new EstacionFueraDeServicioException("La estacion meteorologica asociada no esta operativa.");
         }
+        if (fechaHora.isAfter(LocalDateTime.now())) {
+            throw new LecturaInvalidaException("La fecha de la lectura no puede ser posterior a la fecha actual.");
+        }
         Medicion anterior = obtenerUltimaMedicion();
+        if (anterior != null && fechaHora.isBefore(anterior.getFechaHora())) {
+            throw new LecturaInvalidaException("La lectura no puede ser anterior a la ultima lectura del sensor ("
+                    + anterior.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ").");
+        }
         boolean anomala = anterior != null && Math.abs(milimetros - anterior.getMilimetros()) > 100;
 
         Medicion medicion = new Medicion(fechaHora, milimetros, anomala);
