@@ -34,30 +34,49 @@ public class Medicion {
         this.anomala = anomala;
     }
 
+    /** {@return el identificador de la medicion} */
     public int getIdMedicion() {
         return idMedicion;
     }
 
+    /** {@return la fecha y hora de la medicion} */
     public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
+    /**
+     * Modifica la fecha y hora de la medicion.
+     *
+     * @param fechaHora el nuevo valor
+     */
     public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
+    /** {@return la lluvia medida, en mm} */
     public double getMilimetros() {
         return milimetros;
     }
 
+    /**
+     * Modifica la lluvia medida, en mm.
+     *
+     * @param milimetros el nuevo valor
+     */
     public void setMilimetros(double milimetros) {
         this.milimetros = milimetros;
     }
 
+    /** {@return true si la medicion es anomala} */
     public boolean isAnomala() {
         return anomala;
     }
 
+    /**
+     * Indica si la medicion es anomala.
+     *
+     * @param anomala true si la medicion es anomala
+     */
     public void setAnomala(boolean anomala) {
         this.anomala = anomala;
     }

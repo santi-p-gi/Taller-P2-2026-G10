@@ -44,42 +44,72 @@ public abstract class Persona {
         this.celular = celular;
     }
 
+    /** {@return el DNI de la persona} */
     public String getDni() {
         return dni;
     }
 
+    /**
+     * Modifica el DNI de la persona.
+     *
+     * @param dni el nuevo valor
+     */
     public void setDni(String dni) {
         this.dni = dni;
     }
 
+    /** {@return el nombre de la persona} */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Modifica el nombre de la persona.
+     *
+     * @param nombre el nuevo valor
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /** {@return el apellido de la persona} */
     public String getApellido() {
         return apellido;
     }
 
+    /**
+     * Modifica el apellido de la persona.
+     *
+     * @param apellido el nuevo valor
+     */
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
 
+    /** {@return el correo electronico de la persona} */
     public String getCorreoElectronico() {
         return correoElectronico;
     }
 
+    /**
+     * Modifica el correo electronico de la persona.
+     *
+     * @param correoElectronico el nuevo valor
+     */
     public void setCorreoElectronico(String correoElectronico) {
         this.correoElectronico = correoElectronico;
     }
 
+    /** {@return el celular de la persona} */
     public String getCelular() {
         return celular;
     }
 
+    /**
+     * Modifica el celular de la persona.
+     *
+     * @param celular el nuevo valor
+     */
     public void setCelular(String celular) {
         this.celular = celular;
     }

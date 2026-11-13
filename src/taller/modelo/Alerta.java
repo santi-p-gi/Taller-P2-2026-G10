@@ -56,58 +56,96 @@ public class Alerta {
         }
     }
 
+    /** {@return el identificador de la alerta} */
     public int getIdAlerta() {
         return idAlerta;
     }
 
+    /** {@return la fecha y hora de la alerta} */
     public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
+    /**
+     * Modifica la fecha y hora de la alerta.
+     *
+     * @param fechaHora el nuevo valor
+     */
     public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
+    /** {@return el nivel de la alerta} */
     public NivelAlerta getNivel() {
         return nivel;
     }
 
+    /**
+     * Modifica el nivel de la alerta.
+     *
+     * @param nivel el nuevo valor
+     */
     public void setNivel(NivelAlerta nivel) {
         this.nivel = nivel;
     }
 
+    /** {@return el tipo de evento climatico de la alerta} */
     public TipoEventoClimatico getTipoEvento() {
         return tipoEvento;
     }
 
+    /**
+     * Modifica el tipo de evento climatico de la alerta.
+     *
+     * @param tipoEvento el nuevo valor
+     */
     public void setTipoEvento(TipoEventoClimatico tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
 
+    /** {@return la descripcion de la alerta} */
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     * Modifica la descripcion de la alerta.
+     *
+     * @param descripcion el nuevo valor
+     */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
+    /** {@return el equipo asignado a la alerta} */
     public EquipoRespuesta getEquipoRespuesta() {
         return equipoRespuesta;
     }
 
+    /**
+     * Modifica el equipo asignado a la alerta.
+     *
+     * @param equipoRespuesta el nuevo valor
+     */
     public void setEquipoRespuesta(EquipoRespuesta equipoRespuesta) {
         this.equipoRespuesta = equipoRespuesta;
     }
 
+    /** {@return la zona geografica de la alerta} */
     public ZonaGeografica getZonaGeografica() {
         return zonaGeografica;
     }
 
+    /**
+     * Modifica la zona geografica de la alerta.
+     *
+     * @param zonaGeografica el nuevo valor
+     */
     public void setZonaGeografica(ZonaGeografica zonaGeografica) {
         this.zonaGeografica = zonaGeografica;
     }
 
+    /** {@return true si la alerta fue atendida} */
     public boolean isAtendida() {
         return atendida;
     }

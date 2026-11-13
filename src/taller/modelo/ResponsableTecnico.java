@@ -51,34 +51,58 @@ public class ResponsableTecnico extends Persona {
         this.numeroLicencia = numeroLicencia;
     }
 
+    /** {@return la especialidad del responsable} */
     public String getEspecialidad() {
         return especialidad;
     }
 
+    /**
+     * Modifica la especialidad del responsable.
+     *
+     * @param especialidad el nuevo valor
+     */
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
 
+    /** {@return el numero de licencia del responsable} */
     public String getNumeroLicencia() {
         return numeroLicencia;
     }
 
+    /**
+     * Modifica el numero de licencia del responsable.
+     *
+     * @param numeroLicencia el nuevo valor
+     */
     public void setNumeroLicencia(String numeroLicencia) {
         this.numeroLicencia = numeroLicencia;
     }
 
+    /** {@return el equipo al que pertenece el responsable} */
     public EquipoRespuesta getEquipoRespuesta() {
         return equipoRespuesta;
     }
 
+    /**
+     * Modifica el equipo al que pertenece el responsable.
+     *
+     * @param equipoRespuesta el nuevo valor
+     */
     public void setEquipoRespuesta(EquipoRespuesta equipoRespuesta) {
         this.equipoRespuesta = equipoRespuesta;
     }
 
+    /** {@return las estaciones a cargo del responsable} */
     public List<EstacionMeteorologica> getEstacionesAsignadas() {
         return estacionesAsignadas;
     }
 
+    /**
+     * Modifica las estaciones a cargo del responsable.
+     *
+     * @param estacionesAsignadas el nuevo valor
+     */
     public void setEstacionesAsignadas(List<EstacionMeteorologica> estacionesAsignadas) {
         this.estacionesAsignadas = estacionesAsignadas;
     }
@@ -119,10 +143,16 @@ public class ResponsableTecnico extends Persona {
         return equipoRespuesta != null;
     }
 
+    /** {@return los mantenimientos realizados por el responsable} */
     public List<Mantenimiento> getMantenimientosAsignados() {
         return mantenimientosAsignados;
     }
 
+    /**
+     * Modifica los mantenimientos realizados por el responsable.
+     *
+     * @param mantenimientosAsignados el nuevo valor
+     */
     public void setMantenimientosAsignados(List<Mantenimiento> mantenimientosAsignados) {
         this.mantenimientosAsignados = mantenimientosAsignados;
     }

@@ -62,62 +62,105 @@ public class Sensor {
         this.mediciones = new ArrayList<>();
     }
 
+    /** {@return el identificador del sensor} */
     public int getIdSensor() {
         return idSensor;
     }
 
+    /** {@return la marca del sensor} */
     public String getMarca() {
         return marca;
     }
 
+    /**
+     * Modifica la marca del sensor.
+     *
+     * @param marca el nuevo valor
+     */
     public void setMarca(String marca) {
         this.marca = marca;
     }
 
+    /** {@return el modelo del sensor} */
     public String getModelo() {
         return modelo;
     }
 
+    /**
+     * Modifica el modelo del sensor.
+     *
+     * @param modelo el nuevo valor
+     */
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
 
+    /** {@return la precision del sensor, en mm} */
     public double getPrecision() {
         return precision;
     }
 
+    /**
+     * Modifica la precision del sensor, en mm.
+     *
+     * @param precision el nuevo valor
+     */
     public void setPrecision(double precision) {
         this.precision = precision;
     }
 
+    /** {@return el estado operativo del sensor} */
     public EstadoOperativo getEstado() {
         return estado;
     }
 
+    /**
+     * Modifica el estado operativo del sensor.
+     *
+     * @param estado el nuevo valor
+     */
     public void setEstado(EstadoOperativo estado) {
         this.estado = estado;
     }
 
+    /** {@return la fecha de la ultima calibracion del sensor} */
     public LocalDateTime getUltimaCalibracion() {
         return ultimaCalibracion;
     }
 
+    /**
+     * Modifica la fecha de la ultima calibracion del sensor.
+     *
+     * @param ultimaCalibracion el nuevo valor
+     */
     public void setUltimaCalibracion(LocalDateTime ultimaCalibracion) {
         this.ultimaCalibracion = ultimaCalibracion;
     }
 
+    /** {@return la estacion del sensor} */
     public EstacionMeteorologica getEstacionMeteorologica() {
         return estacionMeteorologica;
     }
 
+    /**
+     * Modifica la estacion del sensor.
+     *
+     * @param estacionMeteorologica el nuevo valor
+     */
     public void setEstacionMeteorologica(EstacionMeteorologica estacionMeteorologica) {
         this.estacionMeteorologica = estacionMeteorologica;
     }
 
+    /** {@return los mantenimientos del sensor} */
     public List<Mantenimiento> getMantenimientos() {
         return mantenimientos;
     }
 
+    /**
+     * Modifica los mantenimientos del sensor.
+     *
+     * @param mantenimientos el nuevo valor
+     */
     public void setMantenimientos(List<Mantenimiento> mantenimientos) {
         this.mantenimientos = mantenimientos;
     }
@@ -131,10 +174,16 @@ public class Sensor {
         this.mantenimientos.add(mantenimiento);
     }
 
+    /** {@return las mediciones del sensor} */
     public List<Medicion> getMediciones() {
         return mediciones;
     }
 
+    /**
+     * Modifica las mediciones del sensor.
+     *
+     * @param mediciones el nuevo valor
+     */
     public void setMediciones(List<Medicion> mediciones) {
         this.mediciones = mediciones;
     }

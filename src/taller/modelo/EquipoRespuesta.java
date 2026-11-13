@@ -38,38 +38,63 @@ public class EquipoRespuesta {
         this.responsablesAsignados = new ArrayList<>();
     }
 
+    /** {@return el identificador del equipo} */
     public int getIdEquipo() {
         return idEquipo;
     }
 
+    /** {@return el nombre del equipo} */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Modifica el nombre del equipo.
+     *
+     * @param nombre el nuevo valor
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /** {@return true si el equipo esta disponible} */
     public boolean isDisponible() {
         return disponible;
     }
 
+    /**
+     * Indica si el equipo esta disponible.
+     *
+     * @param disponible true si el equipo esta disponible
+     */
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
 
+    /** {@return las alertas asignadas al equipo} */
     public List<Alerta> getAlertasAsignadas() {
         return alertasAsignadas;
     }
 
+    /**
+     * Modifica las alertas asignadas al equipo.
+     *
+     * @param alertasAsignadas el nuevo valor
+     */
     public void setAlertasAsignadas(List<Alerta> alertasAsignadas) {
         this.alertasAsignadas = alertasAsignadas;
     }
 
+    /** {@return los integrantes del equipo} */
     public List<ResponsableTecnico> getResponsablesAsignados() {
         return responsablesAsignados;
     }
 
+    /**
+     * Modifica los integrantes del equipo.
+     *
+     * @param responsablesAsignados el nuevo valor
+     */
     public void setResponsablesAsignados(List<ResponsableTecnico> responsablesAsignados) {
         this.responsablesAsignados = responsablesAsignados;
     }

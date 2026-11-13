@@ -28,18 +28,30 @@ public class ValorHistorico {
         setAcumuladoMedio(acumuladoMedio);
     }
 
+    /** {@return el mes, de 1 a 12} */
     public int getMes() {
         return mes;
     }
 
+    /**
+     * Modifica el mes, de 1 a 12.
+     *
+     * @param mes el nuevo valor
+     */
     public void setMes(int mes) {
         this.mes = mes;
     }
 
+    /** {@return la lluvia media historica del mes, en mm} */
     public double getAcumuladoMedio() {
         return acumuladoMedio;
     }
 
+    /**
+     * Modifica la lluvia media historica del mes, en mm.
+     *
+     * @param acumuladoMedio el nuevo valor
+     */
     public void setAcumuladoMedio(double acumuladoMedio) {
         if (!(acumuladoMedio >= 0)) {
             throw new IllegalArgumentException("El acumulado medio no puede ser negativo.");

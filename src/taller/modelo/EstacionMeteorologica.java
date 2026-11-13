@@ -75,86 +75,147 @@ public class EstacionMeteorologica {
 
     }
 
+    /** {@return el identificador de la estacion} */
     public int getIdEstacion() {
         return idEstacion;
     }
 
+    /** {@return la direccion de la estacion} */
     public String getDireccion() {
         return direccion;
     }
 
+    /**
+     * Modifica la direccion de la estacion.
+     *
+     * @param direccion el nuevo valor
+     */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
+    /** {@return el nombre de la estacion} */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Modifica el nombre de la estacion.
+     *
+     * @param nombre el nuevo valor
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /** {@return la latitud de la estacion} */
     public Double getLatitud() {
         return latitud;
     }
 
+    /**
+     * Modifica la latitud de la estacion.
+     *
+     * @param latitud el nuevo valor
+     */
     public void setLatitud(Double latitud) {
         this.latitud = latitud;
     }
 
+    /** {@return la longitud de la estacion} */
     public Double getLongitud() {
         return longitud;
     }
 
+    /**
+     * Modifica la longitud de la estacion.
+     *
+     * @param longitud el nuevo valor
+     */
     public void setLongitud(Double longitud) {
         this.longitud = longitud;
     }
 
+    /** {@return la altitud de la estacion, en metros} */
     public double getAltitud() {
         return altitud;
     }
 
+    /**
+     * Modifica la altitud de la estacion, en metros.
+     *
+     * @param altitud el nuevo valor
+     */
     public void setAltitud(double altitud) {
         this.altitud = altitud;
     }
 
+    /** {@return el estado operativo de la estacion} */
     public EstadoOperativo getEstado() {
         return estado;
     }
 
+    /**
+     * Modifica el estado operativo de la estacion.
+     *
+     * @param estado el nuevo valor
+     */
     public void setEstado(EstadoOperativo estado) {
         this.estado = estado;
     }
 
+    /** {@return el tipo de estacion} */
     public TipoEstacion getTipo() {
         return tipo;
     }
 
+    /**
+     * Modifica el tipo de estacion.
+     *
+     * @param tipo el nuevo valor
+     */
     public void setTipo(TipoEstacion tipo) {
         this.tipo = tipo;
     }
 
+    /** {@return la zona geografica de la estacion} */
     public ZonaGeografica getZonaGeografica() {
         return zonaGeografica;
     }
 
+    /**
+     * Modifica la zona geografica de la estacion.
+     *
+     * @param zonaGeografica el nuevo valor
+     */
     public void setZonaGeografica(ZonaGeografica zonaGeografica) {
         this.zonaGeografica = zonaGeografica;
     }
 
+    /** {@return los sensores instalados en la estacion} */
     public List<Sensor> getSensores() {
         return sensores;
     }
 
+    /**
+     * Modifica los sensores instalados en la estacion.
+     *
+     * @param sensores el nuevo valor
+     */
     public void setSensores(List<Sensor> sensores) {
         this.sensores = sensores;
     }
 
+    /** {@return los mantenimientos de la estacion} */
     public List<Mantenimiento> getMantenimientos() {
         return mantenimientos;
     }
 
+    /**
+     * Modifica los mantenimientos de la estacion.
+     *
+     * @param mantenimientos el nuevo valor
+     */
     public void setMantenimientos(List<Mantenimiento> mantenimientos) {
         this.mantenimientos = mantenimientos;
     }
@@ -183,6 +244,7 @@ public class EstacionMeteorologica {
         return acumulado;
     }
 
+    /** {@return el responsable tecnico de la estacion} */
     public ResponsableTecnico getResponsableTecnico() {
         return responsableTecnico;
     }

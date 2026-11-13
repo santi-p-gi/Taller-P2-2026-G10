@@ -50,54 +50,91 @@ public class Mantenimiento {
 
     }
 
+    /** {@return el identificador del mantenimiento} */
     public int getIdMantenimiento() {
         return idMantenimiento;
     }
 
+    /** {@return la fecha del mantenimiento} */
     public LocalDateTime getFecha() {
         return fecha;
     }
 
+    /** {@return la estacion del mantenimiento} */
     public EstacionMeteorologica getEstacionMeteorologica() {
         return estacionMeteorologica;
     }
 
+    /**
+     * Modifica la estacion del mantenimiento.
+     *
+     * @param estacionMeteorologica el nuevo valor
+     */
     public void setEstacionMeteorologica(EstacionMeteorologica estacionMeteorologica) {
         this.estacionMeteorologica = estacionMeteorologica;
     }
 
+    /**
+     * Modifica la fecha del mantenimiento.
+     *
+     * @param fecha el nuevo valor
+     */
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 
+    /** {@return la descripcion del mantenimiento} */
     public String getDescripcion() {
         return descripcion;
     }
 
+    /**
+     * Modifica la descripcion del mantenimiento.
+     *
+     * @param descripcion el nuevo valor
+     */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
+    /** {@return el tipo de mantenimiento} */
     public TipoMantenimiento getTipo() {
         return tipo;
     }
 
+    /**
+     * Modifica el tipo de mantenimiento.
+     *
+     * @param tipo el nuevo valor
+     */
     public void setTipo(TipoMantenimiento tipo) {
         this.tipo = tipo;
     }
 
+    /** {@return el sensor intervenido, o null si fue sobre la estacion} */
     public Sensor getSensor() {
         return sensor;
     }
 
+    /**
+     * Modifica el sensor intervenido, o null si fue sobre la estacion.
+     *
+     * @param sensor el nuevo valor
+     */
     public void setSensor(Sensor sensor) {
         this.sensor = sensor;
     }
 
+    /** {@return el responsable tecnico del mantenimiento} */
     public ResponsableTecnico getResponsableTecnico() {
         return responsableTecnico;
     }
 
+    /**
+     * Modifica el responsable tecnico del mantenimiento.
+     *
+     * @param responsableTecnico el nuevo valor
+     */
     public void setResponsableTecnico(ResponsableTecnico responsableTecnico) {
         this.responsableTecnico = responsableTecnico;
     }

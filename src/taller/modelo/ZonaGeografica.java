@@ -60,38 +60,63 @@ public class ZonaGeografica {
         this.alertas = new ArrayList<>();
     }
 
+    /** {@return el identificador de la zona} */
     public int getIdZona() {
         return idZona;
     }
 
+    /** {@return el nombre de la zona} */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * Modifica el nombre de la zona.
+     *
+     * @param nombre el nuevo valor
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /** {@return el nivel de vulnerabilidad de la zona} */
     public NivelVulnerabilidad getNivelVulnerabilidad() {
         return nivelVulnerabilidad;
     }
 
+    /**
+     * Modifica el nivel de vulnerabilidad de la zona.
+     *
+     * @param nivelVulnerabilidad el nuevo valor
+     */
     public void setNivelVulnerabilidad(NivelVulnerabilidad nivelVulnerabilidad) {
         this.nivelVulnerabilidad = nivelVulnerabilidad;
     }
 
+    /** {@return el nivel de alerta vigente de la zona} */
     public NivelAlerta getNivelAlertaActual() {
         return nivelAlertaActual;
     }
 
+    /**
+     * Modifica el nivel de alerta vigente de la zona.
+     *
+     * @param nivelAlertaActual el nuevo valor
+     */
     public void setNivelAlertaActual(NivelAlerta nivelAlertaActual) {
         this.nivelAlertaActual = nivelAlertaActual;
     }
 
+    /** {@return los valores historicos mensuales de la zona} */
     public List<ValorHistorico> getValoresHistoricos() {
         return valoresHistoricos;
     }
 
+    /**
+     * Modifica los valores historicos mensuales de la zona.
+     *
+     * @param valoresHistoricos el nuevo valor
+     */
     public void setValoresHistoricos(List<ValorHistorico> valoresHistoricos) {
         this.valoresHistoricos = valoresHistoricos;
     }
@@ -110,10 +135,16 @@ public class ZonaGeografica {
         this.valoresHistoricos.add(new ValorHistorico(mes, acumuladoMedio));
     }
 
+    /** {@return las estaciones de la zona} */
     public List<EstacionMeteorologica> getEstacionesMeteorologicas() {
         return estacionesMeteorologicas;
     }
 
+    /**
+     * Modifica las estaciones de la zona.
+     *
+     * @param estacionesMeteorologicas el nuevo valor
+     */
     public void setEstacionesMeteorologicas(List<EstacionMeteorologica> estacionesMeteorologicas) {
         this.estacionesMeteorologicas = estacionesMeteorologicas;
     }
@@ -137,10 +168,16 @@ public class ZonaGeografica {
         this.estacionesMeteorologicas.remove(estacion);
     }
 
+    /** {@return las alertas emitidas en la zona} */
     public List<Alerta> getAlertas() {
         return alertas;
     }
 
+    /**
+     * Modifica las alertas emitidas en la zona.
+     *
+     * @param alertas el nuevo valor
+     */
     public void setAlertas(List<Alerta> alertas) {
         this.alertas = alertas;
     }
@@ -172,14 +209,17 @@ public class ZonaGeografica {
         this.umbralRoja = umbralRoja;
     }
 
+    /** {@return el umbral de alerta amarilla, en mm} */
     public double getUmbralAmarilla() {
         return umbralAmarilla;
     }
 
+    /** {@return el umbral de alerta naranja, en mm} */
     public double getUmbralNaranja() {
         return umbralNaranja;
     }
 
+    /** {@return el umbral de alerta roja, en mm} */
     public double getUmbralRoja() {
         return umbralRoja;
     }
